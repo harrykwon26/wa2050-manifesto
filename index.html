@@ -214,6 +214,9 @@
 
   /* ---------- MANIFESTO STAGE ---------- */
   .fl-view-toggle { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .fl-submit-row { display: flex; gap: 12px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+  .fl-submit-status { font-size: 12.5px; color: var(--ink-soft); font-weight: 600; }
+  .fl-shared-hint { font-size: 12px; color: var(--ink-soft); margin-top: 6px; font-style: italic; }
 
   .fl-brief-editor { margin-bottom: 26px; }
   .fl-brief-editor .fl-brief-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -278,6 +281,14 @@
     display: none; background: #FBE9E9; border: 1px solid #E9B8B8; color: #7A2E2E;
     border-radius: 10px; padding: 12px 16px; font-size: 13px; margin-bottom: 18px;
   }
+
+  #fl-progress-bar {
+    background: var(--purple-light); border-radius: 14px; padding: 16px 18px; margin-bottom: 20px;
+  }
+  #fl-progress-bar .fl-progress-title { font-size: 12.5px; font-weight: 800; color: var(--purple-dark); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  #fl-progress-bar .fl-progress-note { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 10px; }
+  #fl-progress-bar .fl-progress-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  #fl-progress-status { font-size: 12px; color: var(--ink-soft); margin-left: 4px; }
 </style>
 </head>
 <body>
@@ -286,6 +297,17 @@
   <div id="fl-app">
     <div id="fl-storage-warning">Your browser isn't saving progress right now (private/incognito mode or storage is disabled). You can keep working, but refreshing or closing this tab may lose your answers — download your Word brief often as a backup.</div>
 
+    <div id="fl-progress-bar">
+      <div class="fl-progress-title">Working across devices?</div>
+      <p class="fl-progress-note">Download your progress at the end of a session, then load it back in — on this laptop or any other — before your next one.</p>
+      <div class="fl-progress-actions">
+        <button class="fl-btn fl-btn-primary" id="fl-save-progress-btn" type="button">Download my progress</button>
+        <button class="fl-btn fl-btn-ghost" id="fl-load-progress-btn" type="button">Load progress file</button>
+        <input type="file" id="fl-load-progress-input" accept="application/json,.json" style="display:none;">
+        <span id="fl-progress-status"></span>
+      </div>
+    </div>
+
     <div id="fl-header">
       <div class="fl-eyebrow">Fogarty Ripple &middot; Leadership Legacy</div>
       <h1 class="fl-display">WA2050 Manifesto</h1>
@@ -293,7 +315,7 @@
 
     <div id="fl-namebar">
       <label for="fl-meta-name">Group name</label>
-      <input type="text" id="fl-meta-name" placeholder="e.g. Hien Tran &amp; Co.">
+      <input type="text" id="fl-meta-name" placeholder="e.g. Teach Learn Grow">
     </div>
 
     <div id="fl-stepper"></div>
@@ -304,6 +326,14 @@
 <script>
 (function(){
   const STORAGE_KEY = 'fogarty-legacy-manifesto-v1';
+
+  const LENSES = [
+    { id: '3s', label: '3S', question: 'Sizeable, solvable, sorely overlooked?' },
+    { id: 'iceberg', label: 'Iceberg', question: "What's underneath the symptom?" },
+    { id: '5whys', label: '5 Whys', question: 'Why, five times — where do you land?' },
+    { id: 'vorp', label: 'VORP', question: "What do you bring that others wouldn't?" },
+    { id: 'toc', label: 'TOC', question: "What's the actual mechanism?" }
+  ];
 
   const PATHWAYS = [
     { id: 'enterprise', label: 'Social Enterprise & Impact Business', desc: 'Create a product, service or venture that fixes the problem directly and sustains itself.' },
@@ -356,27 +386,21 @@
 
       '<g fill="none" stroke-linecap="round">' +
         '<path d="M170,198 Q115,140 75,85" stroke="#7A9E80" stroke-width="3" opacity=".9"/>' +
-        '<path d="M170,198 Q140,110 118,55" stroke="#7A9E80" stroke-width="3" opacity=".9"/>' +
         '<path d="M170,198 Q170,110 170,45" stroke="#7A9E80" stroke-width="3" opacity=".9"/>' +
-        '<path d="M170,198 Q200,110 222,55" stroke="#7A9E80" stroke-width="3" opacity=".9"/>' +
         '<path d="M170,198 Q225,140 265,85" stroke="#7A9E80" stroke-width="3" opacity=".9"/>' +
       '</g>' +
 
       '<g opacity=".95">' +
         '<circle cx="40" cy="70" r="19" fill="#DCEEDD"/>' +
         '<circle cx="52" cy="78" r="12" fill="#9BCBA8"/>' +
-        '<circle cx="110" cy="32" r="19" fill="#BFE0C8"/>' +
-        '<circle cx="123" cy="42" r="12" fill="#7FB98E"/>' +
         '<circle cx="170" cy="18" r="20" fill="#DCEEDD"/>' +
         '<circle cx="182" cy="28" r="12" fill="#9BCBA8"/>' +
-        '<circle cx="230" cy="32" r="19" fill="#BFE0C8"/>' +
-        '<circle cx="217" cy="42" r="12" fill="#7FB98E"/>' +
         '<circle cx="300" cy="70" r="19" fill="#DCEEDD"/>' +
         '<circle cx="288" cy="78" r="12" fill="#9BCBA8"/>' +
       '</g>' +
     '</svg>';
 
-  const BRANCH_POS = [[40,70],[110,32],[170,18],[230,32],[300,70]];
+  const BRANCH_POS = [[40,70],[170,18],[300,70]];
   const ROOT_POS = [[50,450],[175,520],[300,460]];
   const ROOT_TIER_CLASS = ['fl-root-tier1','fl-root-tier2','fl-root-tier3'];
 
@@ -389,10 +413,10 @@
   function emptyData(){
     return {
       meta: { name: '' },
-      summit1: { challengeTitle: '', sizeable: false, solvable: false, overlooked: false, threeSReasoning: '', effects: '', rootCauses: '', consequence: '', vision: '', stakeholders: '' },
+      summit1: { challengeTitle: '', lens: '', lensReasoning: '', rootCauses: '', consequence: '', vision: '', stakeholders: '' },
       summit2: { pathways: [], control: 3, speed: 3, idea: '', reasoning: '', possibleBecause: '', commitment: '', mentorNotes: '' },
       summit3: { audiences: [], contacts: '', whatWorked: '', whatToAdjust: '', self: '', us: '', now: '' },
-      brief: { challengeText: '', visionText: '', pathwayText: '' }
+      brief: { challengeText: '', visionText: '', pathwayText: '', submitted: false, submittedAt: null }
     };
   }
 
@@ -451,6 +475,44 @@
 
   window.addEventListener('beforeunload', saveDataNow);
 
+  // ---- Portable progress file (download/load) — lets a group move between devices ----
+  function downloadProgressFile(){
+    const name = (data.meta.name || data.summit1.challengeTitle || 'legacy-manifesto').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const payload = JSON.stringify({ savedAt: new Date().toISOString(), data: data }, null, 2);
+    const blob = new Blob([payload], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (name || 'legacy-manifesto') + '-progress.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    const status = document.getElementById('fl-progress-status');
+    if (status) status.textContent = 'Downloaded just now';
+  }
+
+  function loadProgressFile(file){
+    const status = document.getElementById('fl-progress-status');
+    if (!file) return;
+    if (hasAnyContent() && !confirm('Loading a progress file will replace everything currently on this screen. Continue?')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        const incoming = parsed && parsed.data ? parsed.data : parsed;
+        data = withDefaults(incoming);
+        saveDataNow();
+        render();
+        if (status) status.textContent = 'Loaded successfully';
+      } catch(err) {
+        if (status) status.textContent = 'Could not read that file — is it a progress file from this tool?';
+      }
+    };
+    reader.onerror = () => { if (status) status.textContent = 'Could not read that file.'; };
+    reader.readAsText(file);
+  }
+
   // ---------- Helpers ----------
   function escapeHtml(str){
     const d = document.createElement('div');
@@ -460,6 +522,9 @@
   function joinLines(text, sep){
     return (text||'').split('\n').map(s=>s.trim()).filter(Boolean).join(sep);
   }
+  function lensLabel(id){ const l = LENSES.find(l => l.id === id); return l ? l.label : ''; }
+  function lensQuestion(id){ const l = LENSES.find(l => l.id === id); return l ? l.question : ''; }
+
   function pathwayLabel(id){
     const p = PATHWAYS.find(p => p.id === id);
     return p ? p.label : '';
@@ -508,7 +573,7 @@
 
   function buildTreeHtml(challengeTitle, effects, roots){
     let html = '<div class="fl-tree3">' + TREE_LINES_SVG;
-    for (let i=0;i<5;i++){
+    for (let i=0;i<3;i++){
       const p = pct(BRANCH_POS[i][0], BRANCH_POS[i][1]);
       html += chipNodeHtml([effects[i]], 'fl-effect-chip', p.left, p.top);
     }
@@ -534,7 +599,7 @@
       { id: 'summit1', n: 1, t: 'Summit 1' },
       { id: 'summit2', n: 2, t: 'Summit 2' },
       { id: 'summit3', n: 3, t: 'Summit 3' },
-      { id: 'manifesto', n: 4, t: 'My Manifesto' }
+      { id: 'manifesto', n: 4, t: 'My Legacy Brief' }
     ];
     const el = document.getElementById('fl-stepper');
     el.innerHTML = labels.map(l =>
@@ -571,34 +636,37 @@
   // ---- Summit 1 ----
   function summit1Html(){
     const s = data.summit1;
-    const effectsChips = (s.effects||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,5);
+    const effectsChips = (s.consequence||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,3);
     const rootChips = rootLinesArray(s.rootCauses).map(x=>x.trim());
     return '' +
     '<div class="fl-stage-head">' +
       '<div class="fl-kicker">Summit 1 &middot; Go deep on your challenge</div>' +
+      '<h2>Name your challenge</h2>' +
+      '<p>Start by naming the challenge plainly, then match it to a lens to test whether it\'s the right one to spend five weeks on.</p>' +
+    '</div>' +
+
+    '<div class="fl-card" style="margin-bottom:28px;">' +
+      '<label for="fl-s1-title">The challenge, in one line<span class="fl-hint">Name it plainly — you\'ll sharpen it as you go.</span></label>' +
+      '<input type="text" id="fl-s1-title" value="'+escapeHtml(s.challengeTitle)+'" placeholder="e.g. Young West Australians are disengaging from democracy">' +
+
+      '<label>Match your challenge to a lens<span class="fl-hint">Pick the ONE lens that fits best right now — from Summit 1\'s opening session.</span></label>' +
+      '<div class="fl-pathway-options" id="fl-lens-options">' +
+        LENSES.map(l => '<button type="button" class="fl-pathway-opt'+(s.lens===l.id?' fl-selected':'')+'" data-lens="'+l.id+'"><strong>'+escapeHtml(l.label)+'</strong><span>'+escapeHtml(l.question)+'</span></button>').join('') +
+      '</div>' +
+      '<label for="fl-s1-lens-reasoning" id="fl-lens-why-label">Why?<span class="fl-hint" id="fl-lens-why-hint">'+(lensQuestion(s.lens) ? 'Using the ' + escapeHtml(lensLabel(s.lens)) + ' lens: ' + escapeHtml(lensQuestion(s.lens)) : 'Pick a lens above, then explain your thinking.')+'</span></label>' +
+      '<textarea id="fl-s1-lens-reasoning" rows="3" placeholder="Explain your thinking here…">'+escapeHtml(s.lensReasoning)+'</textarea>' +
+    '</div>' +
+
+    '<div class="fl-stage-head">' +
+      '<div class="fl-kicker">Problem Tree Analysis</div>' +
       '<h2>Map the problem tree</h2>' +
-      '<p>Start with what you can see (the effects), then dig underneath to find what\'s really driving it — not just the obvious surface answer.</p>' +
+      '<p>Start with what happens if this goes unaddressed, then dig underneath to find what\'s really driving it — not just the obvious surface answer.</p>' +
     '</div>' +
     '<div class="fl-grid">' +
       '<div class="fl-card fl-visual-card" id="fl-tree-container">' + buildTreeHtml(s.challengeTitle, effectsChips, rootChips) + '</div>' +
       '<div class="fl-card">' +
-        '<label for="fl-s1-title">The challenge, in one line<span class="fl-hint">Name it plainly — you\'ll sharpen it as you go.</span></label>' +
-        '<input type="text" id="fl-s1-title" value="'+escapeHtml(s.challengeTitle)+'" placeholder="e.g. Young West Australians are disengaging from democracy">' +
-
-        '<label>The 3S check<span class="fl-hint">Tap each one you believe is true of this challenge.</span></label>' +
-        '<div class="fl-3s-row">' +
-          '<button type="button" class="fl-3s-chip'+(s.sizeable?' fl-on':'')+'" data-s3s="sizeable">Sizeable<span>Big enough to matter for WA</span></button>' +
-          '<button type="button" class="fl-3s-chip'+(s.solvable?' fl-on':'')+'" data-s3s="solvable">Solvable<span>Something a group can move</span></button>' +
-          '<button type="button" class="fl-3s-chip'+(s.overlooked?' fl-on':'')+'" data-s3s="overlooked">Sorely overlooked<span>Not already well covered</span></button>' +
-        '</div>' +
-        '<label for="fl-s1-3s-reasoning">Why?<span class="fl-hint">Explain your reasoning for the 3S check above.</span></label>' +
-        '<textarea id="fl-s1-3s-reasoning" rows="2" placeholder="e.g. Sizeable because it affects nearly a third of eligible young voters in WA…">'+escapeHtml(s.threeSReasoning)+'</textarea>' +
-
-        '<label for="fl-s1-effects">What you can see (effects)<span class="fl-hint">One per line, up to 5. The visible symptoms — these become the canopy of your tree.</span></label>' +
-        '<textarea id="fl-s1-effects" rows="3" placeholder="e.g. Falling youth voter turnout">'+escapeHtml(s.effects)+'</textarea>' +
-
-        '<label for="fl-s1-consequence">Without action…<span class="fl-hint">The consequence for WA if these effects continue unaddressed.</span></label>' +
-        '<textarea id="fl-s1-consequence" rows="2" placeholder="…the next generation will inherit an even wider gap.">'+escapeHtml(s.consequence)+'</textarea>' +
+        '<label for="fl-s1-consequence">Without action…<span class="fl-hint">One per line, up to 3. The effects and consequences of leaving this unaddressed — these become the canopy of your tree.</span></label>' +
+        '<textarea id="fl-s1-consequence" rows="3" placeholder="e.g. Falling youth voter turnout">'+escapeHtml(s.consequence)+'</textarea>' +
 
         '<label>What\'s underneath (root causes)<span class="fl-hint">Three groups of three, matching the three branches in your tree. List from most immediate (1) to most fundamental (3) in each group.</span></label>' +
         rootGroupsHtml(s.rootCauses) +
@@ -620,16 +688,15 @@
   function wireSummit1(){
     if (uiActive !== 'summit1') return;
     const t = document.getElementById('fl-s1-title');
-    const e = document.getElementById('fl-s1-effects');
     const c = document.getElementById('fl-s1-consequence');
     const v = document.getElementById('fl-s1-vision');
     const st = document.getElementById('fl-s1-stakeholders');
-    const reasoning3s = document.getElementById('fl-s1-3s-reasoning');
-    [ [t,'challengeTitle'], [e,'effects'], [c,'consequence'], [v,'vision'], [st,'stakeholders'], [reasoning3s,'threeSReasoning'] ].forEach(([node,key]) => {
+    const lensReasoning = document.getElementById('fl-s1-lens-reasoning');
+    [ [t,'challengeTitle'], [c,'consequence'], [v,'vision'], [st,'stakeholders'], [lensReasoning,'lensReasoning'] ].forEach(([node,key]) => {
       node.addEventListener('input', () => {
         data.summit1[key] = node.value;
         scheduleSave();
-        if (key === 'challengeTitle' || key === 'effects') refreshTreeVisual();
+        if (key === 'challengeTitle' || key === 'consequence') refreshTreeVisual();
       });
     });
     document.querySelectorAll('#fl-stage-summit1 .fl-root-input').forEach(input => {
@@ -642,11 +709,13 @@
         refreshTreeVisual();
       });
     });
-    document.querySelectorAll('#fl-stage-summit1 .fl-3s-chip').forEach(btn => {
+    document.querySelectorAll('#fl-lens-options .fl-pathway-opt').forEach(btn => {
       btn.addEventListener('click', () => {
-        const key = btn.dataset.s3s;
-        data.summit1[key] = !data.summit1[key];
-        btn.classList.toggle('fl-on', data.summit1[key]);
+        const id = btn.dataset.lens;
+        data.summit1.lens = id;
+        document.querySelectorAll('#fl-lens-options .fl-pathway-opt').forEach(b => b.classList.toggle('fl-selected', b.dataset.lens === id));
+        const hint = document.getElementById('fl-lens-why-hint');
+        if (hint) hint.textContent = 'Using the ' + lensLabel(id) + ' lens: ' + lensQuestion(id);
         scheduleSave();
       });
     });
@@ -656,7 +725,7 @@
     const wrap = document.getElementById('fl-tree-container');
     if (!wrap) return;
     const s = data.summit1;
-    const effectsChips = (s.effects||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,5);
+    const effectsChips = (s.consequence||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,3);
     const rootChips = rootLinesArray(s.rootCauses).map(x=>x.trim());
     wrap.innerHTML = buildTreeHtml(s.challengeTitle, effectsChips, rootChips);
   }
@@ -849,17 +918,17 @@
   function manifestoHtml(){
     if (!hasAnyContent()){
       return '<div class="fl-stage-head">' +
-        '<div class="fl-kicker">Your WA2050 Manifesto</div>' +
-        '<h2>Your manifesto will take shape here</h2>' +
+        '<div class="fl-kicker">My Legacy Brief</div>' +
+        '<h2>Your Legacy Brief will take shape here</h2>' +
         '<p>Come back once you\'ve worked through Summits #1-3 - this is where it all comes together into your Legacy Brief and your vision to be presented at Ripple Legacy Night.</p>' +
       '</div>';
     }
     const b = data.brief;
     return '' +
     '<div class="fl-stage-head">' +
-      '<div class="fl-kicker">Your WA2050 Manifesto</div>' +
+      '<div class="fl-kicker">My Legacy Brief</div>' +
       '<h2>Bring it together</h2>' +
-      '<p>Draft your three-part Legacy Brief from your summit answers, then polish the wording. This becomes both your printed Legacy Brief and your Legacy Night story — download it as a Word document to send to your program coordinator.</p>' +
+      '<p>Draft your three-part Legacy Brief from your summit answers, then polish the wording. This becomes both your printed Legacy Brief and your Legacy Night story.</p>' +
     '</div>' +
 
     '<div class="fl-brief-editor fl-card">' +
@@ -869,6 +938,11 @@
       '<div class="fl-brief-field"><label for="fl-brief-challenge">The Core Challenge</label><textarea id="fl-brief-challenge" placeholder="Draft from your answers, then polish the wording here.">'+escapeHtml(b.challengeText)+'</textarea></div>' +
       '<div class="fl-brief-field"><label for="fl-brief-vision">The Vision — WA 2050</label><textarea id="fl-brief-vision">'+escapeHtml(b.visionText)+'</textarea></div>' +
       '<div class="fl-brief-field"><label for="fl-brief-pathway">The Pathway to Change</label><textarea id="fl-brief-pathway">'+escapeHtml(b.pathwayText)+'</textarea></div>' +
+      '<div class="fl-submit-row">' +
+        '<button class="fl-btn fl-btn-primary" id="fl-submit-btn" type="button">'+(b.submitted ? 'Update my submission' : 'Submit my Legacy Brief')+'</button>' +
+        '<span class="fl-submit-status" id="fl-submit-status">'+(b.submitted ? 'Submitted ' + new Date(b.submittedAt).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not yet submitted')+'</span>' +
+      '</div>' +
+      '<p class="fl-shared-hint">Submitting downloads your Legacy Brief as a Word document — email that file to your program coordinator to complete your submission.</p>' +
       '<div class="fl-savebar"></div>' +
     '</div>' +
 
@@ -891,6 +965,17 @@
       '<div class="fl-bp-box fl-bp-neutral"><h4>The Vision — WA 2050</h4><p>'+escapeHtml(b.visionText || 'Draft your vision paragraph above.')+'</p></div>' +
       '<div class="fl-bp-box fl-bp-accent"><h4>The Pathway to Change</h4><p>'+escapeHtml(b.pathwayText || 'Draft your pathway paragraph above.')+'</p></div>' +
     '</div>';
+  }
+
+  function submitLegacyBrief(){
+    data.brief.submitted = true;
+    data.brief.submittedAt = new Date().toISOString();
+    saveDataNow();
+    downloadWordBrief();
+    const statusEl = document.getElementById('fl-submit-status');
+    const btn = document.getElementById('fl-submit-btn');
+    if (statusEl) statusEl.textContent = 'Submitted ' + new Date(data.brief.submittedAt).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' });
+    if (btn) btn.textContent = 'Update my submission';
   }
 
   function wireManifesto(){
@@ -922,6 +1007,7 @@
     document.getElementById('fl-view-story').addEventListener('click', () => { uiStoryView = 'story'; renderStages(); });
     document.getElementById('fl-view-brief').addEventListener('click', () => { uiStoryView = 'brief'; renderStages(); });
     document.getElementById('fl-download-doc').addEventListener('click', downloadWordBrief);
+    document.getElementById('fl-submit-btn').addEventListener('click', submitLegacyBrief);
 
     if (uiStoryView === 'story') initStoryScroll();
   }
@@ -1022,6 +1108,16 @@
   }
 
   // ---- Init ----
+  document.getElementById('fl-save-progress-btn').addEventListener('click', downloadProgressFile);
+  document.getElementById('fl-load-progress-btn').addEventListener('click', () => {
+    document.getElementById('fl-load-progress-input').click();
+  });
+  document.getElementById('fl-load-progress-input').addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    loadProgressFile(file);
+    e.target.value = '';
+  });
+
   storageAvailable = checkStorageAvailable();
   if (!storageAvailable) {
     document.getElementById('fl-storage-warning').style.display = 'block';
