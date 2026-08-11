@@ -126,14 +126,13 @@
   .fl-3s-chip span { display: block; font-weight: 500; font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
   .fl-3s-chip.fl-on { border-color: var(--orange); background: #FFF6EC; color: var(--purple-dark); }
 
-  /* Numbered root-cause groups (3 branches x 3 lines) */
-  .fl-root-group { border: 1px dashed var(--line); border-radius: 10px; padding: 4px 12px; margin-bottom: 10px; background: var(--paper-card); }
-  .fl-root-group-label { font-size: 11px; font-weight: 800; color: var(--orange); text-transform: uppercase; letter-spacing: .06em; padding-top: 8px; }
-  .fl-root-line { display: flex; align-items: center; gap: 8px; padding: 6px 0; }
-  .fl-root-line:not(:last-child) { border-bottom: 1px dotted var(--line); }
+  /* Horizontal peer rows (root causes, stakeholders) — items sit side by side, not stacked */
+  .fl-peer-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .fl-peer-item { flex: 1; min-width: 130px; display: flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--paper-card); }
   .fl-root-num { flex: 0 0 16px; font-weight: 800; color: var(--purple-dark); font-size: 12.5px; }
-  #fl-root .fl-root-line input.fl-root-input { border: none; border-radius: 0; padding: 4px 2px; background: transparent; width: 100%; font-size: 13.5px; }
-  #fl-root .fl-root-line input.fl-root-input:focus { outline: none; border-bottom: 1.5px solid var(--orange); }
+  #fl-root .fl-peer-item input.fl-peer-input { border: none; border-radius: 0; padding: 2px; background: transparent; width: 100%; font-size: 13.5px; }
+  #fl-root .fl-peer-item input.fl-peer-input:focus { outline: none; }
+  #fl-root .fl-peer-item:focus-within { border-color: var(--orange); }
 
   /* Standout Legacy Vision / Roundtable Feedback section */
   .fl-vision-hero {
@@ -161,10 +160,14 @@
   .fl-tree3 .fl-t3-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); opacity: .7; }
   .fl-tree3 .fl-tree-chip { font-size: 11px; padding: 5px 9px; border-radius: 8px; font-weight: 700; max-width: 105px; text-align: center; line-height: 1.3; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
   .fl-tree3 .fl-tree-chip .fl-chip-divider { border-top: 1px dashed rgba(0,0,0,.18); margin: 4px 0; }
-  .fl-tree3 .fl-effect-chip { background: var(--purple-light); color: var(--purple-dark); }
-  .fl-tree3 .fl-root-tier1 { background: #F1E7E0; color: #6B4A2C; max-width: 145px; }
-  .fl-tree3 .fl-root-tier2 { background: #EADFCF; color: #5C3E22; font-size: 10.5px; max-width: 135px; }
-  .fl-tree3 .fl-root-tier3 { background: #E3D5BC; color: #4A3016; font-size: 10px; max-width: 125px; opacity: .92; }
+  .fl-tree3 .fl-challenge-chip { background: var(--orange); color: #fff; font-weight: 800; max-width: 200px; font-size: 11.5px; }
+  .fl-tree3 .fl-symptom-chip { background: #EAF3FB; color: #1D4E73; max-width: 130px; }
+  .fl-tree3 .fl-pattern-chip { background: #D6E9F7; color: #164A6E; max-width: 135px; }
+  .fl-tree3 .fl-structure-chip { background: #B8D9EF; color: #123F60; font-size: 10.5px; max-width: 135px; }
+  .fl-tree3 .fl-rootcause-chip { background: #E8F6FC; color: #0B3D62; font-size: 10px; max-width: 100px; font-weight: 800; }
+
+  .fl-stakemap { position: relative; width: 100%; max-width: 620px; margin: 0 auto; aspect-ratio: 700 / 460; }
+  .fl-stakemap .fl-tree-chip.fl-stake-chip { background: #FFF6EC; color: var(--purple-dark); max-width: 95px; font-size: 10.5px; }
   .fl-tree3 .fl-t3-trunk-wrap .fl-trunk { background: var(--orange); color: #fff; font-size: 12px; font-weight: 700; padding: 9px 16px; border-radius: 10px; text-align: center; white-space: normal; max-width: 250px; line-height: 1.3; }
 
   /* Pathway 2x2 */
@@ -346,63 +349,41 @@
 
   const AUDIENCES = ['Government', 'Private Sector', 'Not-for-profit', 'Other'];
 
-  const TREE_LINES_SVG =
+  const ICEBERG_SVG =
     '<svg class="fl-tree3-lines" viewBox="0 0 340 680" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
       '<defs>' +
-        '<linearGradient id="flSoil" x1="0" y1="0" x2="0" y2="1">' +
-          '<stop offset="0" stop-color="#F1E7E0"/>' +
-          '<stop offset="1" stop-color="#DCC7A8"/>' +
-        '</linearGradient>' +
-        '<linearGradient id="flTrunk" x1="0" y1="0" x2="1" y2="0">' +
-          '<stop offset="0" stop-color="#8B5E34"/>' +
-          '<stop offset="0.5" stop-color="#A9723F"/>' +
-          '<stop offset="1" stop-color="#7A4E2A"/>' +
+        '<linearGradient id="flWater" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0" stop-color="#BFE0F2"/>' +
+          '<stop offset="1" stop-color="#0B3D62"/>' +
         '</linearGradient>' +
       '</defs>' +
-
-      '<path d="M0,340 Q170,322 340,340 L340,680 L0,680 Z" fill="url(#flSoil)"/>' +
-      '<path d="M0,340 Q170,322 340,340" fill="none" stroke="#C7A87F" stroke-width="2"/>' +
-
-      '<g fill="none" stroke-linecap="round">' +
-        '<path d="M170,340 Q100,400 50,450" stroke="#8B5E34" stroke-width="3.6" opacity=".95"/>' +
-        '<path d="M170,340 Q172,430 175,520" stroke="#8B5E34" stroke-width="3.6" opacity=".95"/>' +
-        '<path d="M170,340 Q240,400 300,460" stroke="#8B5E34" stroke-width="3.6" opacity=".95"/>' +
-        '<path d="M110,395 q-10,6 -16,12" stroke="#8B5E34" stroke-width="1.3" opacity=".45"/>' +
-        '<path d="M173,430 q6,10 10,16" stroke="#8B5E34" stroke-width="1.3" opacity=".45"/>' +
-        '<path d="M235,400 q10,6 16,12" stroke="#8B5E34" stroke-width="1.3" opacity=".45"/>' +
-      '</g>' +
-
-      '<path d="M160,198 Q154,270 142,340 L198,340 Q186,270 180,198 Z" fill="url(#flTrunk)"/>' +
-      '<path d="M168,205 L166,335" stroke="#6B4425" stroke-width="1.2" opacity=".5"/>' +
-      '<path d="M176,208 L178,335" stroke="#6B4425" stroke-width="1.2" opacity=".5"/>' +
-
-      '<g opacity=".6">' +
-        '<circle cx="90" cy="70" r="46" fill="#CFE9D6"/>' +
-        '<circle cx="170" cy="46" r="55" fill="#DFF0E3"/>' +
-        '<circle cx="250" cy="70" r="46" fill="#BFE0C8"/>' +
-        '<circle cx="130" cy="95" r="40" fill="#DFF0E3"/>' +
-        '<circle cx="210" cy="95" r="40" fill="#CFE9D6"/>' +
-      '</g>' +
-
-      '<g fill="none" stroke-linecap="round">' +
-        '<path d="M170,198 Q115,140 75,85" stroke="#7A9E80" stroke-width="3" opacity=".9"/>' +
-        '<path d="M170,198 Q170,110 170,45" stroke="#7A9E80" stroke-width="3" opacity=".9"/>' +
-        '<path d="M170,198 Q225,140 265,85" stroke="#7A9E80" stroke-width="3" opacity=".9"/>' +
-      '</g>' +
-
-      '<g opacity=".95">' +
-        '<circle cx="40" cy="70" r="19" fill="#DCEEDD"/>' +
-        '<circle cx="52" cy="78" r="12" fill="#9BCBA8"/>' +
-        '<circle cx="170" cy="18" r="20" fill="#DCEEDD"/>' +
-        '<circle cx="182" cy="28" r="12" fill="#9BCBA8"/>' +
-        '<circle cx="300" cy="70" r="19" fill="#DCEEDD"/>' +
-        '<circle cx="288" cy="78" r="12" fill="#9BCBA8"/>' +
-      '</g>' +
+      '<rect x="0" y="0" width="340" height="220" fill="#EAF3FB"/>' +
+      '<rect x="0" y="220" width="340" height="460" fill="url(#flWater)"/>' +
+      '<line x1="0" y1="220" x2="340" y2="220" stroke="#FFFFFF" stroke-width="1" opacity=".6"/>' +
+      '<path d="M150,220 L145,180 L160,140 L170,110 L182,145 L195,185 L190,220 Z" fill="#F4FAFE" stroke="#B8D4E8" stroke-width="1"/>' +
+      '<path d="M150,220 L190,220 L250,300 L270,400 L240,500 L100,500 L60,400 L90,300 Z" fill="#FFFFFF" opacity=".5" stroke="#DCEEFA" stroke-width="1"/>' +
+      '<circle cx="120" cy="330" r="3" fill="#FFFFFF" opacity=".5"/>' +
+      '<circle cx="220" cy="400" r="2.5" fill="#FFFFFF" opacity=".4"/>' +
+      '<circle cx="160" cy="460" r="2" fill="#FFFFFF" opacity=".4"/>' +
     '</svg>';
 
-  const BRANCH_POS = [[40,70],[170,18],[300,70]];
-  const ROOT_POS = [[50,450],[175,520],[300,460]];
-  const ROOT_TIER_CLASS = ['fl-root-tier1','fl-root-tier2','fl-root-tier3'];
+  const CHALLENGE_POS = [170,45];
+  const SYMPTOM_POS = [170,160];
+  const PATTERN_POS = [170,260];
+  const STRUCTURE_POS = [170,380];
+  const ROOTCAUSE_POS = [[170,530],[90,500],[250,500]];
+
+  const STAKE_HUB = [350,230];
+  const STAKE_SPOKES = [[620,80],[660,220],[610,370],[460,420],[280,420],[140,370],[90,220],[140,80]];
+  const STAKE_COLORS = ['#FF8121','#51255A','#3B7A5A','#FF8121','#51255A','#3B7A5A','#FF8121','#51255A'];
+  const STAKE_PLACEHOLDERS = ['e.g. Local MP','e.g. Dept of Education','e.g. School principal','e.g. Youth council rep','Another stakeholder…','Another stakeholder…','Another stakeholder…','Another stakeholder…'];
+  const STAKEHOLDER_SVG =
+    '<svg class="fl-tree3-lines" viewBox="0 0 700 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
+      STAKE_SPOKES.map((p,i) => '<line x1="'+STAKE_HUB[0]+'" y1="'+STAKE_HUB[1]+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="'+STAKE_COLORS[i]+'" stroke-width="3" stroke-linecap="round"/>').join('') +
+      STAKE_SPOKES.map((p,i) => '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="11" fill="'+STAKE_COLORS[i]+'"/>').join('') +
+      '<circle cx="'+STAKE_HUB[0]+'" cy="'+STAKE_HUB[1]+'" r="46" fill="#3D3D3D"/>' +
+      '<text x="'+STAKE_HUB[0]+'" y="'+(STAKE_HUB[1]+5)+'" text-anchor="middle" font-size="12.5" font-weight="800" fill="#FFFFFF" font-family="Work Sans, sans-serif">Stakeholders</text>' +
+    '</svg>';
 
   // ---------- Module state ----------
   let uiActive = 'summit1';
@@ -413,7 +394,7 @@
   function emptyData(){
     return {
       meta: { name: '' },
-      summit1: { challengeTitle: '', lens: '', lensReasoning: '', rootCauses: '', consequence: '', vision: '', stakeholders: '' },
+      summit1: { challengeTitle: '', lens: '', lensReasoning: '', symptom: '', pattern: '', structure: '', rootCauses: '', vision: '', stakeholders: '' },
       summit2: { pathways: [], control: 3, speed: 3, idea: '', reasoning: '', possibleBecause: '', commitment: '', mentorNotes: '' },
       summit3: { audiences: [], contacts: '', whatWorked: '', whatToAdjust: '', self: '', us: '', now: '' },
       brief: { challengeText: '', visionText: '', pathwayText: '', submitted: false, submittedAt: null }
@@ -535,33 +516,35 @@
 
   // ---------- Problem tree visual ----------
   function pct(x,y){ return { left: (x/340*100).toFixed(2)+'%', top: (y/680*100).toFixed(2)+'%' }; }
+  function pctStake(x,y){ return { left: (x/700*100).toFixed(2)+'%', top: (y/460*100).toFixed(2)+'%' }; }
 
-  function rootLinesArray(text){
+  function linesArray(text, n){
     const lines = (text || '').split('\n');
     const arr = [];
-    for (let i=0;i<9;i++) arr.push(lines[i] !== undefined ? lines[i] : '');
+    for (let i=0;i<n;i++) arr.push(lines[i] !== undefined ? lines[i] : '');
     return arr;
   }
+  function rootLinesArray(text){ return linesArray(text, 3); }
+  function stakeholderLinesArray(text){ return linesArray(text, 8); }
 
-  const ROOT_LINE_PLACEHOLDERS = [
-    'Most immediate cause…',
-    'A layer deeper…',
-    'The most fundamental cause…'
+  const ROOT_CAUSE_PLACEHOLDERS = [
+    'Most obvious root cause…',
+    'A second, if there is one…',
+    'A third, if there is one…'
   ];
 
-  function rootGroupsHtml(rootCausesText){
-    const lines = rootLinesArray(rootCausesText);
-    let html = '';
-    for (let g=0; g<3; g++){
-      html += '<div class="fl-root-group"><div class="fl-root-group-label">Branch '+(g+1)+'</div>';
-      for (let l=0; l<3; l++){
-        const idx = g*3+l;
-        html += '<div class="fl-root-line"><span class="fl-root-num">'+(l+1)+'.</span>' +
-          '<input type="text" class="fl-root-input" data-idx="'+idx+'" id="fl-s1-root-'+idx+'" value="'+escapeHtml(lines[idx])+'" placeholder="'+ROOT_LINE_PLACEHOLDERS[l]+'"></div>';
-      }
-      html += '</div>';
+  function peerRowHtml(lines, idPrefix, placeholders, fieldKey){
+    let html = '<div class="fl-peer-row">';
+    for (let i=0; i<placeholders.length; i++){
+      html += '<div class="fl-peer-item"><span class="fl-root-num">'+(i+1)+'.</span>' +
+        '<input type="text" class="fl-peer-input" data-idx="'+i+'" data-field="'+fieldKey+'" id="'+idPrefix+'-'+i+'" value="'+escapeHtml(lines[i]||'')+'" placeholder="'+placeholders[i]+'"></div>';
     }
+    html += '</div>';
     return html;
+  }
+
+  function rootCauseGroupHtml(rootCausesText){
+    return peerRowHtml(rootLinesArray(rootCausesText), 'fl-s1-root', ROOT_CAUSE_PLACEHOLDERS, 'rootCauses');
   }
 
   function chipNodeHtml(lines, cls, left, top){
@@ -571,18 +554,32 @@
     return '<div class="fl-t3-node" style="left:'+left+';top:'+top+';"><div class="fl-tree-chip '+cls+'">'+inner+'</div></div>';
   }
 
-  function buildTreeHtml(challengeTitle, effects, roots){
-    let html = '<div class="fl-tree3">' + TREE_LINES_SVG;
+  function buildIcebergHtml(challengeTitle, symptom, pattern, structure, rootCauses){
+    let html = '<div class="fl-tree3">' + ICEBERG_SVG;
+    const cp = pct(CHALLENGE_POS[0], CHALLENGE_POS[1]);
+    html += chipNodeHtml([challengeTitle], 'fl-challenge-chip', cp.left, cp.top);
+    const sp = pct(SYMPTOM_POS[0], SYMPTOM_POS[1]);
+    html += chipNodeHtml([symptom], 'fl-symptom-chip', sp.left, sp.top);
+    const pp = pct(PATTERN_POS[0], PATTERN_POS[1]);
+    html += chipNodeHtml([pattern], 'fl-pattern-chip', pp.left, pp.top);
+    const stp = pct(STRUCTURE_POS[0], STRUCTURE_POS[1]);
+    html += chipNodeHtml([structure], 'fl-structure-chip', stp.left, stp.top);
     for (let i=0;i<3;i++){
-      const p = pct(BRANCH_POS[i][0], BRANCH_POS[i][1]);
-      html += chipNodeHtml([effects[i]], 'fl-effect-chip', p.left, p.top);
+      const rp = pct(ROOTCAUSE_POS[i][0], ROOTCAUSE_POS[i][1]);
+      html += chipNodeHtml([rootCauses[i]], 'fl-rootcause-chip', rp.left, rp.top);
     }
-    for (let i=0;i<3;i++){
-      const p = pct(ROOT_POS[i][0], ROOT_POS[i][1]);
-      html += chipNodeHtml([roots[i*3], roots[i*3+1], roots[i*3+2]], ROOT_TIER_CLASS[i], p.left, p.top);
+    html += '</div>';
+    return html;
+  }
+
+  function buildStakeholderMapHtml(lines){
+    let html = '<div class="fl-tree3 fl-stakemap">' + STAKEHOLDER_SVG;
+    for (let i=0;i<8;i++){
+      const text = (lines[i]||'').trim();
+      if (!text) continue;
+      const p = pctStake(STAKE_SPOKES[i][0], STAKE_SPOKES[i][1]);
+      html += '<div class="fl-t3-node" style="left:'+p.left+';top:'+p.top+';"><div class="fl-tree-chip fl-stake-chip">'+escapeHtml(text)+'</div></div>';
     }
-    const trunkP = pct(170,235);
-    html += '<div class="fl-t3-node fl-t3-trunk-wrap" style="left:'+trunkP.left+';top:'+trunkP.top+';"><div class="fl-trunk">'+(escapeHtml(challengeTitle) || 'Your challenge')+'</div></div>';
     html += '</div>';
     return html;
   }
@@ -636,20 +633,18 @@
   // ---- Summit 1 ----
   function summit1Html(){
     const s = data.summit1;
-    const effectsChips = (s.consequence||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,3);
-    const rootChips = rootLinesArray(s.rootCauses).map(x=>x.trim());
     return '' +
     '<div class="fl-stage-head">' +
       '<div class="fl-kicker">Summit 1 &middot; Go deep on your challenge</div>' +
       '<h2>Name your challenge</h2>' +
-      '<p>Start by naming the challenge plainly, then match it to a lens to test whether it\'s the right one to spend five weeks on.</p>' +
+      '<p>Frame your challenge and begin to deep dive.</p>' +
     '</div>' +
 
     '<div class="fl-card" style="margin-bottom:28px;">' +
-      '<label for="fl-s1-title">The challenge, in one line<span class="fl-hint">Name it plainly — you\'ll sharpen it as you go.</span></label>' +
+      '<label for="fl-s1-title">The challenge, in one sentence<span class="fl-hint">Name it plainly — you\'ll sharpen it as you go.</span></label>' +
       '<input type="text" id="fl-s1-title" value="'+escapeHtml(s.challengeTitle)+'" placeholder="e.g. Young West Australians are disengaging from democracy">' +
 
-      '<label>Match your challenge to a lens<span class="fl-hint">Pick the ONE lens that fits best right now — from Summit 1\'s opening session.</span></label>' +
+      '<label>Select the ONE lens that fits best right now<span class="fl-hint">From Summit 1\'s opening session.</span></label>' +
       '<div class="fl-pathway-options" id="fl-lens-options">' +
         LENSES.map(l => '<button type="button" class="fl-pathway-opt'+(s.lens===l.id?' fl-selected':'')+'" data-lens="'+l.id+'"><strong>'+escapeHtml(l.label)+'</strong><span>'+escapeHtml(l.question)+'</span></button>').join('') +
       '</div>' +
@@ -658,55 +653,69 @@
     '</div>' +
 
     '<div class="fl-stage-head">' +
-      '<div class="fl-kicker">Problem Tree Analysis</div>' +
-      '<h2>Map the problem tree</h2>' +
-      '<p>Start with what happens if this goes unaddressed, then dig underneath to find what\'s really driving it — not just the obvious surface answer.</p>' +
+      '<div class="fl-kicker">Iceberg Analysis</div>' +
+      '<h2>Go beneath the surface</h2>' +
+      '<p>Most people stop at the symptom. Walk down through what keeps happening, what system produces it, and the root cause underneath it all — the layer worth changing.</p>' +
     '</div>' +
     '<div class="fl-grid">' +
-      '<div class="fl-card fl-visual-card" id="fl-tree-container">' + buildTreeHtml(s.challengeTitle, effectsChips, rootChips) + '</div>' +
+      '<div class="fl-card fl-visual-card" id="fl-tree-container">' + buildIcebergHtml(s.challengeTitle, s.symptom, s.pattern, s.structure, rootLinesArray(s.rootCauses)) + '</div>' +
       '<div class="fl-card">' +
-        '<label for="fl-s1-consequence">Without action…<span class="fl-hint">One per line, up to 3. The effects and consequences of leaving this unaddressed — these become the canopy of your tree.</span></label>' +
-        '<textarea id="fl-s1-consequence" rows="3" placeholder="e.g. Falling youth voter turnout">'+escapeHtml(s.consequence)+'</textarea>' +
+        '<label for="fl-s1-symptom">Symptom<span class="fl-hint">The visible thing that first caught your attention.</span></label>' +
+        '<input type="text" id="fl-s1-symptom" value="'+escapeHtml(s.symptom)+'" placeholder="e.g. Falling youth voter turnout">' +
 
-        '<label>What\'s underneath (root causes)<span class="fl-hint">Three groups of three, matching the three branches in your tree. List from most immediate (1) to most fundamental (3) in each group.</span></label>' +
-        rootGroupsHtml(s.rootCauses) +
+        '<label for="fl-s1-pattern">Pattern<span class="fl-hint">Does this keep happening, or was it a one-off?</span></label>' +
+        '<input type="text" id="fl-s1-pattern" value="'+escapeHtml(s.pattern)+'" placeholder="e.g. Turnout has fallen every election since 2010">' +
+
+        '<label for="fl-s1-structure">Structure<span class="fl-hint">What system or incentive is producing that pattern?</span></label>' +
+        '<input type="text" id="fl-s1-structure" value="'+escapeHtml(s.structure)+'" placeholder="e.g. Civic education isn\'t part of the curriculum">' +
+
+        '<label>Root cause<span class="fl-hint">The layer underneath — the one worth changing. List up to 3 if there\'s more than one.</span></label>' +
+        rootCauseGroupHtml(s.rootCauses) +
 
         '<div class="fl-savebar"></div>' +
       '</div>' +
     '</div>' +
 
+    '<div class="fl-card" style="margin-top:20px;">' +
+      '<label style="margin-top:0;">Map your stakeholders<span class="fl-hint">Who else has a stake in this challenge? Add stakeholders you could reach out to invite to your roundtable during Summit #3.</span></label>' +
+      '<div id="fl-stakemap-container">' + buildStakeholderMapHtml(stakeholderLinesArray(s.stakeholders)) + '</div>' +
+      peerRowHtml(stakeholderLinesArray(s.stakeholders), 'fl-s1-stake', STAKE_PLACEHOLDERS, 'stakeholders') +
+    '</div>' +
+
     '<div class="fl-vision-hero">' +
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
       '<p class="fl-vision-note">This is a first draft — you\'ll flesh this out over the next five weeks.</p>' +
-      '<label for="fl-s1-vision" class="fl-vision-label">My/Our vision for WA2050 is a state where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
+      '<label for="fl-s1-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
       '<textarea id="fl-s1-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future.">'+escapeHtml(s.vision)+'</textarea>' +
-      '<label for="fl-s1-stakeholders" class="fl-vision-label">Key stakeholders to map<span class="fl-hint">One per line. Who else has a stake in this challenge? Add three key stakeholders whom you could reach out to invite to your roundtable during Summit #3.</span></label>' +
-      '<textarea id="fl-s1-stakeholders" class="fl-vision-textarea" rows="2" placeholder="e.g. John Smith, Department of Education">'+escapeHtml(s.stakeholders)+'</textarea>' +
     '</div>';
   }
 
   function wireSummit1(){
     if (uiActive !== 'summit1') return;
     const t = document.getElementById('fl-s1-title');
-    const c = document.getElementById('fl-s1-consequence');
+    const sy = document.getElementById('fl-s1-symptom');
+    const pa = document.getElementById('fl-s1-pattern');
+    const st2 = document.getElementById('fl-s1-structure');
     const v = document.getElementById('fl-s1-vision');
-    const st = document.getElementById('fl-s1-stakeholders');
     const lensReasoning = document.getElementById('fl-s1-lens-reasoning');
-    [ [t,'challengeTitle'], [c,'consequence'], [v,'vision'], [st,'stakeholders'], [lensReasoning,'lensReasoning'] ].forEach(([node,key]) => {
+    [ [t,'challengeTitle'], [sy,'symptom'], [pa,'pattern'], [st2,'structure'], [v,'vision'], [lensReasoning,'lensReasoning'] ].forEach(([node,key]) => {
       node.addEventListener('input', () => {
         data.summit1[key] = node.value;
         scheduleSave();
-        if (key === 'challengeTitle' || key === 'consequence') refreshTreeVisual();
+        if (key === 'challengeTitle' || key === 'symptom' || key === 'pattern' || key === 'structure') refreshTreeVisual();
       });
     });
-    document.querySelectorAll('#fl-stage-summit1 .fl-root-input').forEach(input => {
+    document.querySelectorAll('#fl-stage-summit1 .fl-peer-input').forEach(input => {
       input.addEventListener('input', () => {
         const idx = +input.dataset.idx;
-        const arr = rootLinesArray(data.summit1.rootCauses);
+        const field = input.dataset.field;
+        const n = field === 'stakeholders' ? 8 : 3;
+        const arr = linesArray(data.summit1[field], n);
         arr[idx] = input.value;
-        data.summit1.rootCauses = arr.join('\n');
+        data.summit1[field] = arr.join('\n');
         scheduleSave();
-        refreshTreeVisual();
+        if (field === 'rootCauses') refreshTreeVisual();
+        else refreshStakeholderMap();
       });
     });
     document.querySelectorAll('#fl-lens-options .fl-pathway-opt').forEach(btn => {
@@ -725,9 +734,13 @@
     const wrap = document.getElementById('fl-tree-container');
     if (!wrap) return;
     const s = data.summit1;
-    const effectsChips = (s.consequence||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,3);
-    const rootChips = rootLinesArray(s.rootCauses).map(x=>x.trim());
-    wrap.innerHTML = buildTreeHtml(s.challengeTitle, effectsChips, rootChips);
+    wrap.innerHTML = buildIcebergHtml(s.challengeTitle, s.symptom, s.pattern, s.structure, rootLinesArray(s.rootCauses));
+  }
+
+  function refreshStakeholderMap(){
+    const wrap = document.getElementById('fl-stakemap-container');
+    if (!wrap) return;
+    wrap.innerHTML = buildStakeholderMapHtml(stakeholderLinesArray(data.summit1.stakeholders));
   }
 
   // ---- Summit 2 ----
@@ -905,7 +918,7 @@
   // ---- Manifesto stage ----
   function draftBrief(){
     const s1 = data.summit1, s2 = data.summit2, s3 = data.summit3;
-    data.brief.challengeText = 'We believe Western Australia faces a challenge of ' + (s1.challengeTitle || '[your challenge]') + '. At its core, this is driven by ' + (joinLines(s1.rootCauses, '; ') || '[root cause]') + '. Without action, ' + (s1.consequence || '[consequence for WA]') + (s3.self ? ' This matters to us personally: ' + s3.self : '') + '.';
+    data.brief.challengeText = 'We believe Western Australia faces a challenge of ' + (s1.challengeTitle || '[your challenge]') + '. At its core, this is driven by ' + (joinLines(s1.rootCauses, '; ') || '[root cause]') + '. Without action, ' + (s1.symptom || '[symptom]') + ' will continue' + (s3.self ? '. This matters to us personally: ' + s3.self : '') + '.';
     data.brief.visionText = (s1.vision || 'A WA where…') + ' We believe this is possible because ' + (s2.possibleBecause || '[evidence or reason for hope]') + (s3.us ? ' ' + s3.us : '') + '.';
     data.brief.pathwayText = 'The most effective pathway to create this change is through ' + (pathwayLabels(s2.pathways) || '[your chosen pathway]') + '. Our role in pursuing it is to ' + (s2.commitment || '[your commitment]') + '.' + (s2.idea ? ' Specifically: ' + s2.idea : '') + (s3.now ? ' ' + s3.now : '');
   }
