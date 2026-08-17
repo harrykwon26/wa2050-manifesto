@@ -126,13 +126,27 @@
   .fl-3s-chip span { display: block; font-weight: 500; font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
   .fl-3s-chip.fl-on { border-color: var(--orange); background: #FFF6EC; color: var(--purple-dark); }
 
-  /* Horizontal peer rows (root causes, stakeholders) — items sit side by side, not stacked */
+  /* Horizontal peer rows (stakeholders, contacts) — items sit side by side, not stacked */
   .fl-peer-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
   .fl-peer-item { flex: 1; min-width: 130px; display: flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--paper-card); }
   .fl-root-num { flex: 0 0 16px; font-weight: 800; color: var(--purple-dark); font-size: 12.5px; }
   #fl-root .fl-peer-item input.fl-peer-input { border: none; border-radius: 0; padding: 2px; background: transparent; width: 100%; font-size: 13.5px; }
   #fl-root .fl-peer-item input.fl-peer-input:focus { outline: none; }
   #fl-root .fl-peer-item:focus-within { border-color: var(--orange); }
+
+  /* Root cause columns — tall, side by side, each grows downward */
+  .fl-rootcause-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+  .fl-rootcause-col { flex: 1; min-width: 140px; display: flex; flex-direction: column; }
+  .fl-rootcause-col .fl-root-num { margin-bottom: 4px; }
+  .fl-rootcause-col textarea.fl-rootcause-textarea { width: 100%; min-height: 130px; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 13.5px; resize: vertical; background: var(--paper); }
+  .fl-rootcause-col textarea.fl-rootcause-textarea:focus { border-color: var(--orange); outline: none; }
+
+  .fl-stake-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
+  @media (max-width: 480px) { .fl-stake-grid { grid-template-columns: 1fr; } }
+  .fl-stake-card { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--paper-card); }
+  .fl-stake-card .fl-root-num { display: block; margin-bottom: 4px; }
+  .fl-stake-card input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: 13px; margin-top: 6px; background: var(--paper); }
+  .fl-stake-card input:focus { border-color: var(--orange); outline: none; }
 
   /* Standout Legacy Vision / Roundtable Feedback section */
   .fl-vision-hero {
@@ -158,15 +172,15 @@
   .fl-tree3-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
   .fl-tree3 .fl-t3-node { position: absolute; transform: translate(-50%, -50%); z-index: 2; }
   .fl-tree3 .fl-t3-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); opacity: .7; }
-  .fl-tree3 .fl-tree-chip { font-size: 11px; padding: 5px 9px; border-radius: 8px; font-weight: 700; max-width: 105px; text-align: center; line-height: 1.3; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .fl-tree3 .fl-tree-chip { font-size: 11px; padding: 5px 9px; border-radius: 8px; font-weight: 700; max-width: 105px; text-align: center; line-height: 1.3; box-shadow: 0 1px 3px rgba(0,0,0,.08); white-space: normal; overflow-wrap: break-word; word-break: break-word; }
   .fl-tree3 .fl-tree-chip .fl-chip-divider { border-top: 1px dashed rgba(0,0,0,.18); margin: 4px 0; }
-  .fl-tree3 .fl-challenge-chip { background: var(--orange); color: #fff; font-weight: 800; max-width: 200px; font-size: 11.5px; }
-  .fl-tree3 .fl-symptom-chip { background: #EAF3FB; color: #1D4E73; max-width: 130px; }
-  .fl-tree3 .fl-pattern-chip { background: #D6E9F7; color: #164A6E; max-width: 135px; }
-  .fl-tree3 .fl-structure-chip { background: #B8D9EF; color: #123F60; font-size: 10.5px; max-width: 135px; }
-  .fl-tree3 .fl-rootcause-chip { background: #E8F6FC; color: #0B3D62; font-size: 10px; max-width: 100px; font-weight: 800; }
+  .fl-tree3 .fl-challenge-chip { background: var(--orange); color: #fff; font-weight: 800; max-width: 210px; font-size: 11.5px; }
+  .fl-tree3 .fl-symptom-chip { background: #EAF3FB; color: #1D4E73; max-width: 145px; }
+  .fl-tree3 .fl-pattern-chip { background: #D6E9F7; color: #164A6E; max-width: 150px; }
+  .fl-tree3 .fl-structure-chip { background: #B8D9EF; color: #123F60; font-size: 10.5px; max-width: 150px; }
+  .fl-tree3 .fl-rootcause-chip { background: #E8F6FC; color: #0B3D62; font-size: 10px; max-width: 115px; font-weight: 800; }
 
-  .fl-stakemap { position: relative; width: 100%; max-width: 380px; margin: 0 auto; aspect-ratio: 460 / 460; }
+  .fl-stakemap { position: relative; width: 100%; max-width: 340px; margin: 0 auto; aspect-ratio: 400 / 400; }
   .fl-stakemap .fl-tree-chip.fl-stake-chip { background: #FFF6EC; color: var(--purple-dark); max-width: 95px; font-size: 10.5px; }
 
   .fl-goldencircle { width: 100%; max-width: 280px; margin: 0 auto; }
@@ -382,15 +396,14 @@
   const STRUCTURE_POS = [170,380];
   const ROOTCAUSE_POS = [[170,555],[100,480],[240,480]];
 
-  const STAKE_PINS = [[220,95],[140,190],[310,260],[130,330],[210,400]];
-  const STAKE_COLORS = ['#FF8121','#51255A','#3B7A5A','#51255A','#FF8121'];
-  const STAKE_PLACEHOLDERS = ['e.g. Local MP','e.g. Dept of Education','e.g. School principal','e.g. Youth council rep','Another stakeholder…'];
-  const WA_OUTLINE = 'M140,40 L300,25 L410,70 L430,300 L390,420 L180,435 L110,395 L70,335 L105,275 L55,215 L90,155 L45,95 Z';
+  const STAKE_PINS = [[200,50],[340,110],[360,260],[260,360],[100,350],[50,180]];
+  const STAKE_COLORS = ['#FF8121','#51255A','#3B7A5A','#51255A','#FF8121','#3B7A5A'];
+  const STAKE_HUB = [200,210];
   const STAKEHOLDER_SVG =
-    '<svg class="fl-tree3-lines" viewBox="0 0 460 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
-      '<path d="'+WA_OUTLINE+'" fill="#F1E7CE" stroke="#C9B48A" stroke-width="2"/>' +
-      STAKE_PINS.map((p,i) => '<ellipse cx="'+p[0]+'" cy="'+(p[1]+13)+'" rx="9" ry="3" fill="#000000" opacity=".18"/>').join('') +
+    '<svg class="fl-tree3-lines" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
+      STAKE_PINS.map((p,i) => '<line x1="'+STAKE_HUB[0]+'" y1="'+STAKE_HUB[1]+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="'+STAKE_COLORS[i]+'" stroke-width="3" stroke-linecap="round" opacity=".9"/>').join('') +
       STAKE_PINS.map((p,i) => '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="11" fill="'+STAKE_COLORS[i]+'" stroke="#FFFFFF" stroke-width="2"/>').join('') +
+      '<circle cx="'+STAKE_HUB[0]+'" cy="'+STAKE_HUB[1]+'" r="28" fill="#3D3D3D" stroke="#FFFFFF" stroke-width="2"/>' +
     '</svg>';
 
   // ---------- Module state ----------
@@ -403,7 +416,7 @@
   function emptyData(){
     return {
       meta: { name: '' },
-      summit1: { challengeTitle: '', lens: '', lensReasoning: '', symptom: '', pattern: '', structure: '', rootCauses: '', vision: '', stakeholders: '' },
+      summit1: { challengeTitle: '', lens: '', lensReasoning: '', lensReasoning2: '', symptom: '', pattern: '', structure: '', rootCauses: '', vision: '', stakeholders: '' },
       summit2: { pathways: [], reasoning: '', possibleBecause: '', commitment: '', pathwayNotes: {} },
       summit3: { audiences: [], contacts: '', whatWorked: '', whatToAdjust: '', why: '', how: '', what: '' },
       brief: { challengeText: '', visionText: '', pathwayText: '', submitted: false, submittedAt: null }
@@ -525,7 +538,7 @@
 
   // ---------- Problem tree visual ----------
   function pct(x,y){ return { left: (x/340*100).toFixed(2)+'%', top: (y/680*100).toFixed(2)+'%' }; }
-  function pctStake(x,y){ return { left: (x/460*100).toFixed(2)+'%', top: (y/460*100).toFixed(2)+'%' }; }
+  function pctStake(x,y){ return { left: (x/400*100).toFixed(2)+'%', top: (y/400*100).toFixed(2)+'%' }; }
 
   function linesArray(text, n){
     const lines = (text || '').split('\n');
@@ -534,7 +547,7 @@
     return arr;
   }
   function rootLinesArray(text){ return linesArray(text, 3); }
-  function stakeholderLinesArray(text){ return linesArray(text, 5); }
+  function stakeholderLinesArray(text){ return linesArray(text, 6); }
 
   const ROOT_CAUSE_PLACEHOLDERS = [
     'Most obvious root cause…',
@@ -553,7 +566,16 @@
   }
 
   function rootCauseGroupHtml(rootCausesText){
-    return peerRowHtml(rootLinesArray(rootCausesText), 'fl-s1-root', ROOT_CAUSE_PLACEHOLDERS, 'rootCauses');
+    const lines = rootLinesArray(rootCausesText);
+    let html = '<div class="fl-rootcause-row">';
+    for (let i=0; i<3; i++){
+      html += '<div class="fl-rootcause-col">' +
+        '<span class="fl-root-num">'+(i+1)+'.</span>' +
+        '<textarea class="fl-rootcause-textarea" data-idx="'+i+'" id="fl-s1-root-'+i+'" rows="4" placeholder="'+ROOT_CAUSE_PLACEHOLDERS[i]+'">'+escapeHtml(lines[i])+'</textarea>' +
+      '</div>';
+    }
+    html += '</div>';
+    return html;
   }
 
   function chipNodeHtml(lines, cls, left, top){
@@ -581,10 +603,40 @@
     return html;
   }
 
+  function stakeholderName(line){
+    const idx = (line||'').indexOf(' — ');
+    return idx === -1 ? (line||'') : line.slice(0, idx);
+  }
+
+  function stakeholderNamePos(line){
+    const idx = (line||'').indexOf(' — ');
+    if (idx === -1) return { name: line||'', position: '' };
+    return { name: line.slice(0, idx), position: line.slice(idx+3) };
+  }
+  function stakeholderJoin(name, position){
+    const n = (name||'').trim(), p = (position||'').trim();
+    return p ? n + ' — ' + p : n;
+  }
+
+  function stakeholderGroupHtml(stakeholdersText){
+    const lines = stakeholderLinesArray(stakeholdersText);
+    let html = '<div class="fl-stake-grid">';
+    for (let i=0; i<6; i++){
+      const np = stakeholderNamePos(lines[i]);
+      html += '<div class="fl-stake-card">' +
+        '<span class="fl-root-num">'+(i+1)+'.</span>' +
+        '<input type="text" class="fl-stake-name" data-idx="'+i+'" value="'+escapeHtml(np.name)+'" placeholder="Name">' +
+        '<input type="text" class="fl-stake-position" data-idx="'+i+'" value="'+escapeHtml(np.position)+'" placeholder="Position / organisation">' +
+      '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   function buildStakeholderMapHtml(lines){
     let html = '<div class="fl-tree3 fl-stakemap">' + STAKEHOLDER_SVG;
-    for (let i=0;i<5;i++){
-      const text = (lines[i]||'').trim();
+    for (let i=0;i<6;i++){
+      const text = stakeholderName(lines[i]).trim();
       if (!text) continue;
       const p = pctStake(STAKE_PINS[i][0], STAKE_PINS[i][1] - 26);
       html += '<div class="fl-t3-node" style="left:'+p.left+';top:'+p.top+';"><div class="fl-tree-chip fl-stake-chip">'+escapeHtml(text)+'</div></div>';
@@ -704,6 +756,8 @@
       '</div>' +
       '<label for="fl-s1-lens-reasoning" id="fl-lens-why-label">Why?<span class="fl-hint" id="fl-lens-why-hint">'+(lensQuestion(s.lens) ? 'Using the ' + escapeHtml(lensLabel(s.lens)) + ' lens: ' + escapeHtml(lensQuestion(s.lens)) : 'Pick a lens above, then explain your thinking.')+'</span></label>' +
       '<textarea id="fl-s1-lens-reasoning" rows="3" placeholder="Explain your thinking here…">'+escapeHtml(s.lensReasoning)+'</textarea>' +
+      '<label for="fl-s1-lens-reasoning-2">Anything else?<span class="fl-hint">Optional — no need to pick another lens, just capture another angle if one comes up.</span></label>' +
+      '<textarea id="fl-s1-lens-reasoning-2" rows="3" placeholder="Another thought worth capturing…">'+escapeHtml(s.lensReasoning2)+'</textarea>' +
     '</div>' +
 
     '<div class="fl-stage-head">' +
@@ -730,10 +784,13 @@
       '</div>' +
     '</div>' +
 
-    '<div class="fl-card" style="margin-top:20px;">' +
-      '<label style="margin-top:0;">Map your stakeholders<span class="fl-hint">Who else has a stake in this challenge? Add stakeholders you could reach out to invite to your roundtable during Summit #3.</span></label>' +
-      '<div id="fl-stakemap-container">' + buildStakeholderMapHtml(stakeholderLinesArray(s.stakeholders)) + '</div>' +
-      peerRowHtml(stakeholderLinesArray(s.stakeholders), 'fl-s1-stake', STAKE_PLACEHOLDERS, 'stakeholders') +
+    '<div class="fl-stage-head" style="margin-top:20px;">' +
+      '<div class="fl-kicker">Map your stakeholders</div>' +
+      '<p>Who else has a stake in this challenge? Add stakeholders you could reach out to invite to your roundtable during Summit #3.</p>' +
+    '</div>' +
+    '<div class="fl-grid">' +
+      '<div class="fl-card fl-visual-card" id="fl-stakemap-container">' + buildStakeholderMapHtml(stakeholderLinesArray(s.stakeholders)) + '</div>' +
+      '<div class="fl-card">' + stakeholderGroupHtml(s.stakeholders) + '</div>' +
     '</div>' +
 
     '<div class="fl-vision-hero">' +
@@ -752,25 +809,37 @@
     const st2 = document.getElementById('fl-s1-structure');
     const v = document.getElementById('fl-s1-vision');
     const lensReasoning = document.getElementById('fl-s1-lens-reasoning');
-    [ [t,'challengeTitle'], [sy,'symptom'], [pa,'pattern'], [st2,'structure'], [v,'vision'], [lensReasoning,'lensReasoning'] ].forEach(([node,key]) => {
+    const lensReasoning2 = document.getElementById('fl-s1-lens-reasoning-2');
+    [ [t,'challengeTitle'], [sy,'symptom'], [pa,'pattern'], [st2,'structure'], [v,'vision'], [lensReasoning,'lensReasoning'], [lensReasoning2,'lensReasoning2'] ].forEach(([node,key]) => {
       node.addEventListener('input', () => {
         data.summit1[key] = node.value;
         scheduleSave();
         if (key === 'challengeTitle' || key === 'symptom' || key === 'pattern' || key === 'structure') refreshTreeVisual();
       });
     });
-    document.querySelectorAll('#fl-stage-summit1 .fl-peer-input').forEach(input => {
-      input.addEventListener('input', () => {
-        const idx = +input.dataset.idx;
-        const field = input.dataset.field;
-        const n = field === 'stakeholders' ? 5 : 3;
-        const arr = linesArray(data.summit1[field], n);
-        arr[idx] = input.value;
-        data.summit1[field] = arr.join('\n');
+    document.querySelectorAll('#fl-stage-summit1 .fl-rootcause-textarea').forEach(ta => {
+      ta.addEventListener('input', () => {
+        const idx = +ta.dataset.idx;
+        const arr = rootLinesArray(data.summit1.rootCauses);
+        arr[idx] = ta.value;
+        data.summit1.rootCauses = arr.join('\n');
         scheduleSave();
-        if (field === 'rootCauses') refreshTreeVisual();
-        else refreshStakeholderMap();
+        refreshTreeVisual();
       });
+    });
+    document.querySelectorAll('#fl-stage-summit1 .fl-stake-card').forEach(card => {
+      const nameInput = card.querySelector('.fl-stake-name');
+      const posInput = card.querySelector('.fl-stake-position');
+      const idx = +nameInput.dataset.idx;
+      const update = () => {
+        const arr = stakeholderLinesArray(data.summit1.stakeholders);
+        arr[idx] = stakeholderJoin(nameInput.value, posInput.value);
+        data.summit1.stakeholders = arr.join('\n');
+        scheduleSave();
+        refreshStakeholderMap();
+      };
+      nameInput.addEventListener('input', update);
+      posInput.addEventListener('input', update);
     });
     document.querySelectorAll('#fl-lens-options .fl-pathway-opt').forEach(btn => {
       btn.addEventListener('click', () => {
