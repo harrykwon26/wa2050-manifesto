@@ -166,19 +166,31 @@
   .fl-tree3 .fl-structure-chip { background: #B8D9EF; color: #123F60; font-size: 10.5px; max-width: 135px; }
   .fl-tree3 .fl-rootcause-chip { background: #E8F6FC; color: #0B3D62; font-size: 10px; max-width: 100px; font-weight: 800; }
 
-  .fl-stakemap { position: relative; width: 100%; max-width: 620px; margin: 0 auto; aspect-ratio: 700 / 460; }
+  .fl-stakemap { position: relative; width: 100%; max-width: 380px; margin: 0 auto; aspect-ratio: 460 / 460; }
   .fl-stakemap .fl-tree-chip.fl-stake-chip { background: #FFF6EC; color: var(--purple-dark); max-width: 95px; font-size: 10.5px; }
+
+  .fl-goldencircle { width: 100%; max-width: 280px; margin: 0 auto; }
+  .fl-goldencircle svg { width: 100%; height: auto; display: block; }
+
+  .fl-contactmap { position: relative; width: 100%; max-width: 340px; margin: 0 auto; aspect-ratio: 440 / 360; }
+  .fl-contactmap .fl-tree-chip.fl-contact-chip { background: #FFF6EC; color: var(--purple-dark); max-width: 90px; font-size: 10px; }
   .fl-tree3 .fl-t3-trunk-wrap .fl-trunk { background: var(--orange); color: #fff; font-size: 12px; font-weight: 700; padding: 9px 16px; border-radius: 10px; text-align: center; white-space: normal; max-width: 250px; line-height: 1.3; }
 
   /* Pathway 2x2 */
-  .fl-quad-wrap { display: flex; flex-direction: column; gap: 10px; }
-  .fl-quad { position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 3px; height: 190px; border-radius: 12px; overflow: hidden; }
-  .fl-quad .fl-q { background: var(--purple-light); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 11px; font-weight: 700; color: var(--purple-dark); padding: 6px; opacity: .55; transition: opacity .2s, background .2s; }
-  .fl-quad .fl-q.fl-q-active { opacity: 1; background: var(--orange); color: #fff; }
+
+
   .fl-axis-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-soft); font-weight: 600; padding: 0 2px; }
 
   .fl-pathway-options { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 6px; }
   @media (min-width: 560px) { .fl-pathway-options { grid-template-columns: 1fr 1fr; } }
+
+  .fl-pw-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 16px; }
+  .fl-pw-tab { border: 1.5px solid var(--line); background: var(--paper-card); border-radius: 999px; padding: 7px 14px; font-size: 12.5px; font-weight: 700; color: var(--ink-soft); }
+  .fl-pw-tab.fl-pw-tab-active { border-color: var(--orange); background: #FFF6EC; color: var(--purple-dark); }
+  .fl-pw-fields { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 620px) { .fl-pw-fields { grid-template-columns: 1fr 1fr; } }
+  .fl-pw-field label { margin-top: 0; }
+  .fl-pw-field textarea { min-height: 70px; }
   .fl-pathway-opt { border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 13px; text-align: left; background: var(--paper-card); }
   .fl-pathway-opt strong { display: block; color: var(--purple-dark); font-size: 13.5px; margin-bottom: 2px; }
   .fl-pathway-opt span { color: var(--ink-soft); font-size: 12.5px; }
@@ -195,10 +207,8 @@
   .fl-audience-chip.fl-selected { border-color: var(--orange); background: #FFF6EC; color: var(--purple-dark); }
 
   /* Story of self/us/now visual */
-  .fl-arc { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0 10px; }
-  .fl-arc .fl-arc-step { flex: 1; text-align: center; }
-  .fl-arc .fl-arc-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--purple-light); color: var(--purple-dark); font-weight: 800; font-size: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; }
-  .fl-arc .fl-arc-label { font-size: 11.5px; font-weight: 700; color: var(--ink-soft); }
+
+
 
   /* Buttons */
   #fl-root .fl-btn {
@@ -342,9 +352,8 @@
     { id: 'enterprise', label: 'Social Enterprise & Impact Business', desc: 'Create a product, service or venture that fixes the problem directly and sustains itself.' },
     { id: 'advocacy', label: 'Advocacy & Campaigning', desc: 'Shift public opinion and build movements through community organising and media.' },
     { id: 'policy', label: 'Policy & Government', desc: 'Work within or alongside government to change rules, funding or institutional priorities.' },
-    { id: 'research', label: 'Research & Evidence', desc: 'Generate the data and proof that shifts how the problem is understood or addressed.' },
-    { id: 'intrapreneurship', label: 'Intrapreneurship', desc: 'Drive change from within an existing organisation, department or institution.' },
-    { id: 'community', label: 'Community & Grassroots Leadership', desc: 'Build locally, connect people, and create collective action from the ground up.' }
+    { id: 'community', label: 'Community & Grassroots Leadership', desc: 'Build locally, connect people, and create collective action from the ground up.' },
+    { id: 'personal-following', label: 'Personal Following', desc: 'Build a public platform or reputation that mobilises people around your voice and message.' }
   ];
 
   const AUDIENCES = ['Government', 'Private Sector', 'Not-for-profit', 'Other'];
@@ -361,7 +370,7 @@
       '<rect x="0" y="220" width="340" height="460" fill="url(#flWater)"/>' +
       '<line x1="0" y1="220" x2="340" y2="220" stroke="#FFFFFF" stroke-width="1" opacity=".6"/>' +
       '<path d="M150,220 L145,180 L160,140 L170,110 L182,145 L195,185 L190,220 Z" fill="#F4FAFE" stroke="#B8D4E8" stroke-width="1"/>' +
-      '<path d="M150,220 L190,220 L250,300 L270,400 L240,500 L100,500 L60,400 L90,300 Z" fill="#FFFFFF" opacity=".5" stroke="#DCEEFA" stroke-width="1"/>' +
+      '<path d="M150,220 Q100,260 90,300 Q60,400 100,460 Q140,540 170,545 Q200,540 240,460 Q280,400 250,300 Q240,260 190,220 Z" fill="#FFFFFF" opacity=".5" stroke="#DCEEFA" stroke-width="1"/>' +
       '<circle cx="120" cy="330" r="3" fill="#FFFFFF" opacity=".5"/>' +
       '<circle cx="220" cy="400" r="2.5" fill="#FFFFFF" opacity=".4"/>' +
       '<circle cx="160" cy="460" r="2" fill="#FFFFFF" opacity=".4"/>' +
@@ -371,23 +380,23 @@
   const SYMPTOM_POS = [170,160];
   const PATTERN_POS = [170,260];
   const STRUCTURE_POS = [170,380];
-  const ROOTCAUSE_POS = [[170,530],[90,500],[250,500]];
+  const ROOTCAUSE_POS = [[170,555],[100,480],[240,480]];
 
-  const STAKE_HUB = [350,230];
-  const STAKE_SPOKES = [[620,80],[660,220],[610,370],[460,420],[280,420],[140,370],[90,220],[140,80]];
-  const STAKE_COLORS = ['#FF8121','#51255A','#3B7A5A','#FF8121','#51255A','#3B7A5A','#FF8121','#51255A'];
-  const STAKE_PLACEHOLDERS = ['e.g. Local MP','e.g. Dept of Education','e.g. School principal','e.g. Youth council rep','Another stakeholder…','Another stakeholder…','Another stakeholder…','Another stakeholder…'];
+  const STAKE_PINS = [[220,95],[140,190],[310,260],[130,330],[210,400]];
+  const STAKE_COLORS = ['#FF8121','#51255A','#3B7A5A','#51255A','#FF8121'];
+  const STAKE_PLACEHOLDERS = ['e.g. Local MP','e.g. Dept of Education','e.g. School principal','e.g. Youth council rep','Another stakeholder…'];
+  const WA_OUTLINE = 'M140,40 L300,25 L410,70 L430,300 L390,420 L180,435 L110,395 L70,335 L105,275 L55,215 L90,155 L45,95 Z';
   const STAKEHOLDER_SVG =
-    '<svg class="fl-tree3-lines" viewBox="0 0 700 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
-      STAKE_SPOKES.map((p,i) => '<line x1="'+STAKE_HUB[0]+'" y1="'+STAKE_HUB[1]+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="'+STAKE_COLORS[i]+'" stroke-width="3" stroke-linecap="round"/>').join('') +
-      STAKE_SPOKES.map((p,i) => '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="11" fill="'+STAKE_COLORS[i]+'"/>').join('') +
-      '<circle cx="'+STAKE_HUB[0]+'" cy="'+STAKE_HUB[1]+'" r="46" fill="#3D3D3D"/>' +
-      '<text x="'+STAKE_HUB[0]+'" y="'+(STAKE_HUB[1]+5)+'" text-anchor="middle" font-size="12.5" font-weight="800" fill="#FFFFFF" font-family="Work Sans, sans-serif">Stakeholders</text>' +
+    '<svg class="fl-tree3-lines" viewBox="0 0 460 460" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
+      '<path d="'+WA_OUTLINE+'" fill="#F1E7CE" stroke="#C9B48A" stroke-width="2"/>' +
+      STAKE_PINS.map((p,i) => '<ellipse cx="'+p[0]+'" cy="'+(p[1]+13)+'" rx="9" ry="3" fill="#000000" opacity=".18"/>').join('') +
+      STAKE_PINS.map((p,i) => '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="11" fill="'+STAKE_COLORS[i]+'" stroke="#FFFFFF" stroke-width="2"/>').join('') +
     '</svg>';
 
   // ---------- Module state ----------
   let uiActive = 'summit1';
   let uiStoryView = 'story';
+  let uiPathwayTab = 'enterprise';
   let data = null;
   let storageAvailable = true;
 
@@ -395,8 +404,8 @@
     return {
       meta: { name: '' },
       summit1: { challengeTitle: '', lens: '', lensReasoning: '', symptom: '', pattern: '', structure: '', rootCauses: '', vision: '', stakeholders: '' },
-      summit2: { pathways: [], control: 3, speed: 3, idea: '', reasoning: '', possibleBecause: '', commitment: '', mentorNotes: '' },
-      summit3: { audiences: [], contacts: '', whatWorked: '', whatToAdjust: '', self: '', us: '', now: '' },
+      summit2: { pathways: [], reasoning: '', possibleBecause: '', commitment: '', pathwayNotes: {} },
+      summit3: { audiences: [], contacts: '', whatWorked: '', whatToAdjust: '', why: '', how: '', what: '' },
       brief: { challengeText: '', visionText: '', pathwayText: '', submitted: false, submittedAt: null }
     };
   }
@@ -516,7 +525,7 @@
 
   // ---------- Problem tree visual ----------
   function pct(x,y){ return { left: (x/340*100).toFixed(2)+'%', top: (y/680*100).toFixed(2)+'%' }; }
-  function pctStake(x,y){ return { left: (x/700*100).toFixed(2)+'%', top: (y/460*100).toFixed(2)+'%' }; }
+  function pctStake(x,y){ return { left: (x/460*100).toFixed(2)+'%', top: (y/460*100).toFixed(2)+'%' }; }
 
   function linesArray(text, n){
     const lines = (text || '').split('\n');
@@ -525,7 +534,7 @@
     return arr;
   }
   function rootLinesArray(text){ return linesArray(text, 3); }
-  function stakeholderLinesArray(text){ return linesArray(text, 8); }
+  function stakeholderLinesArray(text){ return linesArray(text, 5); }
 
   const ROOT_CAUSE_PLACEHOLDERS = [
     'Most obvious root cause…',
@@ -574,15 +583,60 @@
 
   function buildStakeholderMapHtml(lines){
     let html = '<div class="fl-tree3 fl-stakemap">' + STAKEHOLDER_SVG;
-    for (let i=0;i<8;i++){
+    for (let i=0;i<5;i++){
       const text = (lines[i]||'').trim();
       if (!text) continue;
-      const p = pctStake(STAKE_SPOKES[i][0], STAKE_SPOKES[i][1]);
+      const p = pctStake(STAKE_PINS[i][0], STAKE_PINS[i][1] - 26);
       html += '<div class="fl-t3-node" style="left:'+p.left+';top:'+p.top+';"><div class="fl-tree-chip fl-stake-chip">'+escapeHtml(text)+'</div></div>';
     }
     html += '</div>';
     return html;
   }
+
+  function buildGoldenCircleHtml(why, how, what){
+    const hasWhy = !!(why||'').trim();
+    const hasHow = !!(how||'').trim();
+    const hasWhat = !!(what||'').trim();
+    const outerFill = hasWhat ? '#FDEEDC' : '#FBF9FC';
+    const middleFill = hasHow ? '#FFD9A8' : '#FBF9FC';
+    const innerFill = hasWhy ? '#51255A' : '#FBF9FC';
+    const innerText = hasWhy ? '#FFFFFF' : '#51255A';
+    return '<div class="fl-goldencircle">' +
+      '<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">' +
+        '<circle cx="200" cy="200" r="170" fill="'+outerFill+'" stroke="#E4D9EA" stroke-width="2"/>' +
+        '<circle cx="200" cy="200" r="115" fill="'+middleFill+'" stroke="#E4D9EA" stroke-width="2"/>' +
+        '<circle cx="200" cy="200" r="60" fill="'+innerFill+'" stroke="#E4D9EA" stroke-width="2"/>' +
+        '<text x="200" y="55" text-anchor="middle" font-size="15" font-weight="800" fill="#51255A" font-family="Work Sans, sans-serif">WHAT</text>' +
+        '<text x="200" y="108" text-anchor="middle" font-size="15" font-weight="800" fill="#51255A" font-family="Work Sans, sans-serif">HOW</text>' +
+        '<text x="200" y="206" text-anchor="middle" font-size="15" font-weight="800" fill="'+innerText+'" font-family="Work Sans, sans-serif">WHY</text>' +
+      '</svg>' +
+    '</div>';
+  }
+
+  function pctContact(x,y){ return { left: (x/440*100).toFixed(2)+'%', top: (y/360*100).toFixed(2)+'%' }; }
+  const CONTACT_HUB = [220,180];
+  const CONTACT_SPOKES = [[220,40],[370,120],[330,300],[110,300],[70,120]];
+  const CONTACT_COLORS = ['#FF8121','#51255A','#3B7A5A','#51255A','#FF8121'];
+  const CONTACT_SVG =
+    '<svg class="fl-tree3-lines" viewBox="0 0 440 360" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
+      CONTACT_SPOKES.map((p,i) => '<line x1="'+CONTACT_HUB[0]+'" y1="'+CONTACT_HUB[1]+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="'+CONTACT_COLORS[i]+'" stroke-width="2.5" stroke-linecap="round"/>').join('') +
+      CONTACT_SPOKES.map((p,i) => '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="9" fill="'+CONTACT_COLORS[i]+'"/>').join('') +
+      '<circle cx="'+CONTACT_HUB[0]+'" cy="'+CONTACT_HUB[1]+'" r="38" fill="#3D3D3D"/>' +
+      '<text x="'+CONTACT_HUB[0]+'" y="'+(CONTACT_HUB[1]+4)+'" text-anchor="middle" font-size="11" font-weight="800" fill="#FFFFFF" font-family="Work Sans, sans-serif">Your Network</text>' +
+    '</svg>';
+
+  function buildContactMapHtml(lines){
+    let html = '<div class="fl-tree3 fl-contactmap">' + CONTACT_SVG;
+    for (let i=0;i<5;i++){
+      const text = (lines[i]||'').trim();
+      if (!text) continue;
+      const p = pctContact(CONTACT_SPOKES[i][0], CONTACT_SPOKES[i][1]);
+      html += '<div class="fl-t3-node" style="left:'+p.left+';top:'+p.top+';"><div class="fl-tree-chip fl-contact-chip">'+escapeHtml(text)+'</div></div>';
+    }
+    html += '</div>';
+    return html;
+  }
+  function contactLinesArray(text){ return linesArray(text, 5); }
 
   // ---------- Renderers ----------
   function render(){
@@ -709,7 +763,7 @@
       input.addEventListener('input', () => {
         const idx = +input.dataset.idx;
         const field = input.dataset.field;
-        const n = field === 'stakeholders' ? 8 : 3;
+        const n = field === 'stakeholders' ? 5 : 3;
         const arr = linesArray(data.summit1[field], n);
         arr[idx] = input.value;
         data.summit1[field] = arr.join('\n');
@@ -744,71 +798,82 @@
   }
 
   // ---- Summit 2 ----
-  function quadLabel(control, speed){
-    const directNow = control <= 3;
-    const fast = speed <= 3;
-    if (directNow && fast) return 0;
-    if (!directNow && fast) return 1;
-    if (directNow && !fast) return 2;
-    return 3;
+  const PATHWAY_NOTE_FIELDS = [
+    { key: 'assumptions', label: 'Assumptions', hint: 'What are you assuming is true about this pathway?', placeholder: 'We assume…' },
+    { key: 'pros', label: 'Pros', hint: 'What makes this pathway appealing?', placeholder: 'This could work well because…' },
+    { key: 'cons', label: 'Cons', hint: 'What are the risks or downsides?', placeholder: 'The risk here is…' },
+    { key: 'questions', label: 'Questions', hint: 'What would you ask someone working in this pathway?', placeholder: 'We\'d want to ask…' }
+  ];
+
+  function getPathwayNote(pwId){
+    return data.summit2.pathwayNotes[pwId] || { assumptions: '', pros: '', cons: '', questions: '' };
+  }
+
+  function pathwayTabContentHtml(pwId){
+    const note = getPathwayNote(pwId);
+    return '<div class="fl-pw-fields">' +
+      PATHWAY_NOTE_FIELDS.map(f => '<div class="fl-pw-field">' +
+        '<label for="fl-pw-'+f.key+'">'+f.label+'<span class="fl-hint">'+f.hint+'</span></label>' +
+        '<textarea id="fl-pw-'+f.key+'" data-pwfield="'+f.key+'" rows="2" placeholder="'+f.placeholder+'">'+escapeHtml(note[f.key])+'</textarea>' +
+      '</div>').join('') +
+    '</div>';
   }
 
   function summit2Html(){
     const s = data.summit2;
-    const active = quadLabel(s.control, s.speed);
-    const quads = [
-      'Direct action,<br>fast', 'Needs others,<br>fast',
-      'Direct action,<br>structural', 'Needs others,<br>structural'
-    ];
     return '' +
     '<div class="fl-stage-head">' +
       '<div class="fl-kicker">Summit 2 &middot; Find your pathway to change</div>' +
       '<h2>Choose your pathway(s) of change</h2>' +
-      '<p>Hear from the panel of change-makers, then map your challenge against the six pathways below. You can select up to 2 if your approach genuinely combines pathways. Use the sliders as a quick gut-check on how much control you have and how fast change could show up.</p>' +
+      '<p>Explore each pathway before picking one — unpack your assumptions, weigh the pros and cons, and note what you\'d still want to ask a change-maker working in that space.</p>' +
     '</div>' +
-    '<div class="fl-grid">' +
-      '<div class="fl-card fl-visual-card">' +
-        '<div class="fl-quad-wrap">' +
-          '<div class="fl-quad">' + quads.map((q,i)=>'<div class="fl-q'+(i===active?' fl-q-active':'')+'">'+q+'</div>').join('') + '</div>' +
-          '<div class="fl-axis-label"><span>More control</span><span>Needs others to act</span></div>' +
-          '<label style="margin-top:12px;">How much control do you have?<span class="fl-hint"></span></label>' +
-          '<input type="range" min="1" max="5" id="fl-s2-control" value="'+s.control+'">' +
-          '<label>How fast could this show up?<span class="fl-hint">1 = fast &amp; visible, 5 = slow &amp; structural</span></label>' +
-          '<input type="range" min="1" max="5" id="fl-s2-speed" value="'+s.speed+'">' +
-        '</div>' +
+
+    '<div class="fl-card" style="margin-bottom:24px;">' +
+      '<label style="margin-top:0;">Explore each pathway<span class="fl-hint">Tap a pathway, then fill in what you think so far.</span></label>' +
+      '<div class="fl-pw-tabs" id="fl-pw-tabs">' +
+        PATHWAYS.map(p => '<button type="button" class="fl-pw-tab'+(uiPathwayTab===p.id?' fl-pw-tab-active':'')+'" data-pwtab="'+p.id+'">'+escapeHtml(p.label)+'</button>').join('') +
       '</div>' +
-      '<div class="fl-card">' +
-        '<label>Pick your pathway(s)<span class="fl-hint">Choose up to 2 pathways that best fit your root cause.</span></label>' +
-        '<div class="fl-pathway-options" id="fl-s2-pathways">' +
-          PATHWAYS.map(p => '<button type="button" class="fl-pathway-opt'+(s.pathways.indexOf(p.id)>-1?' fl-selected':'')+'" data-pathway="'+p.id+'"><strong>'+escapeHtml(p.label)+'</strong><span>'+escapeHtml(p.desc)+'</span></button>').join('') +
-        '</div>' +
+      '<div id="fl-pw-tab-content">' + pathwayTabContentHtml(uiPathwayTab) + '</div>' +
+    '</div>' +
 
-        '<label for="fl-s2-idea">Your idea<span class="fl-hint">What specifically will you build, run, or push for?</span></label>' +
-        '<textarea id="fl-s2-idea" rows="3" placeholder="e.g. A student-led mentoring platform connecting…">'+escapeHtml(s.idea)+'</textarea>' +
-
-        '<label for="fl-s2-reasoning">Why this pathway fits<span class="fl-hint">Tie it back to the root cause from Summit 1.</span></label>' +
-        '<textarea id="fl-s2-reasoning" rows="3" placeholder="This pathway fits because…">'+escapeHtml(s.reasoning)+'</textarea>' +
-
-        '<label for="fl-s2-possible">We believe this is possible because…<span class="fl-hint">The evidence or reason for hope behind your vision.</span></label>' +
-        '<textarea id="fl-s2-possible" rows="2" placeholder="…similar models have worked in other states.">'+escapeHtml(s.possibleBecause)+'</textarea>' +
-
-        '<label for="fl-s2-commitment">Our role in pursuing it is to…<span class="fl-hint">The specific commitment you\'re making.</span></label>' +
-        '<textarea id="fl-s2-commitment" rows="2" placeholder="…pilot the program with two schools this year.">'+escapeHtml(s.commitment)+'</textarea>' +
-
-        '<label for="fl-s2-mentor">Mentor conversation notes<span class="fl-hint">Optional — capture takeaways from your matched mentor.</span></label>' +
-        '<textarea id="fl-s2-mentor" rows="2" placeholder="Key things my mentor pushed me to consider…">'+escapeHtml(s.mentorNotes)+'</textarea>' +
-
-        '<div class="fl-savebar"></div>' +
+    '<div class="fl-card">' +
+      '<label style="margin-top:0;">Pick your pathway(s)<span class="fl-hint">Choose 1-2 pathways that best fit your root cause.</span></label>' +
+      '<div class="fl-pathway-options" id="fl-s2-pathways">' +
+        PATHWAYS.map(p => '<button type="button" class="fl-pathway-opt'+(s.pathways.indexOf(p.id)>-1?' fl-selected':'')+'" data-pathway="'+p.id+'"><strong>'+escapeHtml(p.label)+'</strong><span>'+escapeHtml(p.desc)+'</span></button>').join('') +
       '</div>' +
+
+      '<label for="fl-s2-reasoning">Why this pathway fits<span class="fl-hint">Tie it back to the root cause from Summit 1.</span></label>' +
+      '<textarea id="fl-s2-reasoning" rows="3" placeholder="This pathway fits because…">'+escapeHtml(s.reasoning)+'</textarea>' +
+
+      '<label for="fl-s2-possible">We believe this is possible because…<span class="fl-hint">The evidence or reason for hope behind your vision.</span></label>' +
+      '<textarea id="fl-s2-possible" rows="2" placeholder="…similar models have worked in other states.">'+escapeHtml(s.possibleBecause)+'</textarea>' +
+
+      '<label for="fl-s2-commitment">Our role in pursuing it is to…<span class="fl-hint">The specific commitment you\'re making.</span></label>' +
+      '<textarea id="fl-s2-commitment" rows="2" placeholder="…pilot the program with two schools this year.">'+escapeHtml(s.commitment)+'</textarea>' +
+
+      '<div class="fl-savebar"></div>' +
+    '</div>' +
+
+    '<div class="fl-vision-hero">' +
+      '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
+      '<p class="fl-vision-note">Revisit and sharpen this as your thinking develops.</p>' +
+      '<label for="fl-s2-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
+      '<textarea id="fl-s2-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
     '</div>';
   }
 
   function wireSummit2(){
     if (uiActive !== 'summit2') return;
-    const control = document.getElementById('fl-s2-control');
-    const speed = document.getElementById('fl-s2-speed');
-    control.addEventListener('input', () => { data.summit2.control = +control.value; refreshQuad(); scheduleSave(); });
-    speed.addEventListener('input', () => { data.summit2.speed = +speed.value; refreshQuad(); scheduleSave(); });
+
+    document.querySelectorAll('#fl-pw-tabs .fl-pw-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        uiPathwayTab = btn.dataset.pwtab;
+        document.querySelectorAll('#fl-pw-tabs .fl-pw-tab').forEach(b => b.classList.toggle('fl-pw-tab-active', b.dataset.pwtab === uiPathwayTab));
+        document.getElementById('fl-pw-tab-content').innerHTML = pathwayTabContentHtml(uiPathwayTab);
+        wirePathwayNoteFields();
+      });
+    });
+    wirePathwayNoteFields();
 
     document.querySelectorAll('#fl-s2-pathways .fl-pathway-opt').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -828,20 +893,26 @@
       });
     });
 
-    const idea = document.getElementById('fl-s2-idea');
     const reasoning = document.getElementById('fl-s2-reasoning');
     const possible = document.getElementById('fl-s2-possible');
     const commitment = document.getElementById('fl-s2-commitment');
-    const mentor = document.getElementById('fl-s2-mentor');
-    [ [idea,'idea'], [reasoning,'reasoning'], [possible,'possibleBecause'], [commitment,'commitment'], [mentor,'mentorNotes'] ].forEach(([node,key]) => {
+    [ [reasoning,'reasoning'], [possible,'possibleBecause'], [commitment,'commitment'] ].forEach(([node,key]) => {
       node.addEventListener('input', () => { data.summit2[key] = node.value; scheduleSave(); });
     });
+
+    const visionField = document.getElementById('fl-s2-vision');
+    visionField.addEventListener('input', () => { data.summit1.vision = visionField.value; scheduleSave(); });
   }
 
-  function refreshQuad(){
-    const s = data.summit2;
-    const active = quadLabel(s.control, s.speed);
-    document.querySelectorAll('#fl-stage-summit2 .fl-q').forEach((el,i) => el.classList.toggle('fl-q-active', i===active));
+  function wirePathwayNoteFields(){
+    document.querySelectorAll('#fl-pw-tab-content textarea').forEach(ta => {
+      ta.addEventListener('input', () => {
+        const field = ta.dataset.pwfield;
+        if (!data.summit2.pathwayNotes[uiPathwayTab]) data.summit2.pathwayNotes[uiPathwayTab] = { assumptions: '', pros: '', cons: '', questions: '' };
+        data.summit2.pathwayNotes[uiPathwayTab][field] = ta.value;
+        scheduleSave();
+      });
+    });
   }
 
   // ---- Summit 3 ----
@@ -851,35 +922,32 @@
     '<div class="fl-stage-head">' +
       '<div class="fl-kicker">Summit 3 &middot; Communicate your vision</div>' +
       '<h2>Finding your Story</h2>' +
-      '<p>You\'ll practice your pitch live with sector leaders at a roundtable, then use Self / Us / Now to give your Legacy Night presentation an emotional spine, not just a logical one.</p>' +
+      '<p>Simon Sinek\'s Golden Circle: start with WHY you care, then HOW you\'ll approach it, then WHAT you\'ll actually do. Fill in all three and watch the circle come together.</p>' +
     '</div>' +
     '<div class="fl-grid">' +
-      '<div class="fl-card fl-visual-card">' +
-        '<div class="fl-arc">' +
-          '<div class="fl-arc-step"><div class="fl-arc-dot">1</div><div class="fl-arc-label">Self</div></div>' +
-          '<div class="fl-arc-step"><div class="fl-arc-dot">2</div><div class="fl-arc-label">Us</div></div>' +
-          '<div class="fl-arc-step"><div class="fl-arc-dot">3</div><div class="fl-arc-label">Now</div></div>' +
-        '</div>' +
-        '<p style="font-size:12.5px; color:var(--ink-soft); margin:0 0 14px;">Why this matters to <em>you</em> &rarr; why it matters to <em>WA</em> &rarr; why it has to happen <em>now</em>, and what you\'re asking for.</p>' +
-        '<label>Roundtable audience(s)<span class="fl-hint">Select all that you practiced pitching to.</span></label>' +
-        '<div class="fl-chip-row" id="fl-s3-audience">' +
-          AUDIENCES.map(a => '<button type="button" class="fl-audience-chip'+(s.audiences.indexOf(a)>-1?' fl-selected':'')+'" data-audience="'+a+'">'+a+'</button>').join('') +
-        '</div>' +
-        '<label for="fl-s3-contacts">People you spoke to<span class="fl-hint">One per line — name, role/organisation.</span></label>' +
-        '<textarea id="fl-s3-contacts" rows="3" placeholder="e.g. Jane Smith, Dept of Education">'+escapeHtml(s.contacts)+'</textarea>' +
-      '</div>' +
+      '<div class="fl-card fl-visual-card" id="fl-goldencircle-container">' + buildGoldenCircleHtml(s.why, s.how, s.what) + '</div>' +
       '<div class="fl-card">' +
-        '<label for="fl-s3-self">Story of Self<span class="fl-hint">A moment that shaped why you care about this.</span></label>' +
-        '<textarea id="fl-s3-self" rows="3" placeholder="I still remember…">'+escapeHtml(s.self)+'</textarea>' +
+        '<label for="fl-s3-why">Why<span class="fl-hint">Why do you personally care about this challenge?</span></label>' +
+        '<textarea id="fl-s3-why" rows="3" placeholder="I care about this because…">'+escapeHtml(s.why)+'</textarea>' +
 
-        '<label for="fl-s3-us">Story of Us<span class="fl-hint">Why this matters to Western Australia, not just to you.</span></label>' +
-        '<textarea id="fl-s3-us" rows="3" placeholder="This matters to all of us because…">'+escapeHtml(s.us)+'</textarea>' +
+        '<label for="fl-s3-how">How<span class="fl-hint">How will you approach it — what makes your approach different?</span></label>' +
+        '<textarea id="fl-s3-how" rows="3" placeholder="We\'ll approach this by…">'+escapeHtml(s.how)+'</textarea>' +
 
-        '<label for="fl-s3-now">Story of Now<span class="fl-hint">The urgency, and the specific ask.</span></label>' +
-        '<textarea id="fl-s3-now" rows="3" placeholder="That\'s why we need to act now, by…">'+escapeHtml(s.now)+'</textarea>' +
+        '<label for="fl-s3-what">What<span class="fl-hint">What will you actually do — the concrete action or ask?</span></label>' +
+        '<textarea id="fl-s3-what" rows="3" placeholder="Specifically, we will…">'+escapeHtml(s.what)+'</textarea>' +
 
         '<div class="fl-savebar"></div>' +
       '</div>' +
+    '</div>' +
+
+    '<div class="fl-card" style="margin-top:20px;">' +
+      '<label style="margin-top:0;">Roundtable audience(s)<span class="fl-hint">Select all that you practiced pitching to.</span></label>' +
+      '<div class="fl-chip-row" id="fl-s3-audience">' +
+        AUDIENCES.map(a => '<button type="button" class="fl-audience-chip'+(s.audiences.indexOf(a)>-1?' fl-selected':'')+'" data-audience="'+a+'">'+a+'</button>').join('') +
+      '</div>' +
+      '<label style="margin-top:18px;">People you spoke to<span class="fl-hint">Map who you connected with during the roundtable.</span></label>' +
+      '<div id="fl-contactmap-container">' + buildContactMapHtml(contactLinesArray(s.contacts)) + '</div>' +
+      peerRowHtml(contactLinesArray(s.contacts), 'fl-s3-contact', ['e.g. Jane Smith, Dept of Education','e.g. Local council rep','Another contact…','Another contact…','Another contact…'], 'contacts') +
     '</div>' +
 
     '<div class="fl-vision-hero">' +
@@ -889,6 +957,13 @@
       '<textarea id="fl-s3-worked" class="fl-vision-textarea" rows="2" placeholder="e.g. The stakeholders responded well to…">'+escapeHtml(s.whatWorked)+'</textarea>' +
       '<label for="fl-s3-adjust" class="fl-vision-label">What to adjust<span class="fl-hint">What would make it land better for a different audience?</span></label>' +
       '<textarea id="fl-s3-adjust" class="fl-vision-textarea" rows="2" placeholder="e.g. Needs a clearer ask for government stakeholders">'+escapeHtml(s.whatToAdjust)+'</textarea>' +
+    '</div>' +
+
+    '<div class="fl-vision-hero">' +
+      '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
+      '<p class="fl-vision-note">Revisit and sharpen this one final time before it becomes part of your Legacy Brief.</p>' +
+      '<label for="fl-s3-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
+      '<textarea id="fl-s3-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
     '</div>';
   }
 
@@ -904,28 +979,59 @@
         scheduleSave();
       });
     });
-    const contacts = document.getElementById('fl-s3-contacts');
+
+    const why = document.getElementById('fl-s3-why');
+    const how = document.getElementById('fl-s3-how');
+    const what = document.getElementById('fl-s3-what');
     const worked = document.getElementById('fl-s3-worked');
     const adjust = document.getElementById('fl-s3-adjust');
-    const self = document.getElementById('fl-s3-self');
-    const us = document.getElementById('fl-s3-us');
-    const now = document.getElementById('fl-s3-now');
-    [ [contacts,'contacts'], [worked,'whatWorked'], [adjust,'whatToAdjust'], [self,'self'], [us,'us'], [now,'now'] ].forEach(([node,key]) => {
-      node.addEventListener('input', () => { data.summit3[key] = node.value; scheduleSave(); });
+    [ [why,'why'], [how,'how'], [what,'what'], [worked,'whatWorked'], [adjust,'whatToAdjust'] ].forEach(([node,key]) => {
+      node.addEventListener('input', () => {
+        data.summit3[key] = node.value;
+        scheduleSave();
+        if (key === 'why' || key === 'how' || key === 'what') refreshGoldenCircle();
+      });
     });
+
+    document.querySelectorAll('#fl-stage-summit3 .fl-peer-input').forEach(input => {
+      input.addEventListener('input', () => {
+        const idx = +input.dataset.idx;
+        const arr = contactLinesArray(data.summit3.contacts);
+        arr[idx] = input.value;
+        data.summit3.contacts = arr.join('\n');
+        scheduleSave();
+        refreshContactMap();
+      });
+    });
+
+    const visionField = document.getElementById('fl-s3-vision');
+    visionField.addEventListener('input', () => { data.summit1.vision = visionField.value; scheduleSave(); });
+  }
+
+  function refreshGoldenCircle(){
+    const wrap = document.getElementById('fl-goldencircle-container');
+    if (!wrap) return;
+    const s = data.summit3;
+    wrap.innerHTML = buildGoldenCircleHtml(s.why, s.how, s.what);
+  }
+
+  function refreshContactMap(){
+    const wrap = document.getElementById('fl-contactmap-container');
+    if (!wrap) return;
+    wrap.innerHTML = buildContactMapHtml(contactLinesArray(data.summit3.contacts));
   }
 
   // ---- Manifesto stage ----
   function draftBrief(){
     const s1 = data.summit1, s2 = data.summit2, s3 = data.summit3;
-    data.brief.challengeText = 'We believe Western Australia faces a challenge of ' + (s1.challengeTitle || '[your challenge]') + '. At its core, this is driven by ' + (joinLines(s1.rootCauses, '; ') || '[root cause]') + '. Without action, ' + (s1.symptom || '[symptom]') + ' will continue' + (s3.self ? '. This matters to us personally: ' + s3.self : '') + '.';
-    data.brief.visionText = (s1.vision || 'A WA where…') + ' We believe this is possible because ' + (s2.possibleBecause || '[evidence or reason for hope]') + (s3.us ? ' ' + s3.us : '') + '.';
-    data.brief.pathwayText = 'The most effective pathway to create this change is through ' + (pathwayLabels(s2.pathways) || '[your chosen pathway]') + '. Our role in pursuing it is to ' + (s2.commitment || '[your commitment]') + '.' + (s2.idea ? ' Specifically: ' + s2.idea : '') + (s3.now ? ' ' + s3.now : '');
+    data.brief.challengeText = 'We believe Western Australia faces a challenge of ' + (s1.challengeTitle || '[your challenge]') + '. At its core, this is driven by ' + (joinLines(s1.rootCauses, '; ') || '[root cause]') + '. Without action, ' + (s1.symptom || '[symptom]') + ' will continue' + (s3.why ? '. This matters to us personally: ' + s3.why : '') + '.';
+    data.brief.visionText = (s1.vision || 'A WA where…') + ' We believe this is possible because ' + (s2.possibleBecause || '[evidence or reason for hope]') + (s3.how ? ' ' + s3.how : '') + '.';
+    data.brief.pathwayText = 'The most effective pathway to create this change is through ' + (pathwayLabels(s2.pathways) || '[your chosen pathway]') + '. Our role in pursuing it is to ' + (s2.commitment || '[your commitment]') + '.' + (s3.what ? ' Specifically: ' + s3.what : '');
   }
 
   function hasAnyContent(){
     const s1 = data.summit1, s2 = data.summit2, s3 = data.summit3, b = data.brief;
-    return !!(s1.challengeTitle || s1.vision || s2.idea || s3.self || b.challengeText || b.visionText || b.pathwayText);
+    return !!(s1.challengeTitle || s1.vision || s2.reasoning || s3.why || b.challengeText || b.visionText || b.pathwayText);
   }
 
   function manifestoHtml(){
