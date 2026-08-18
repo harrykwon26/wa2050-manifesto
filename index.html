@@ -118,6 +118,7 @@
     background: var(--paper); resize: vertical;
   }
   #fl-root textarea:focus, #fl-root input[type=text]:focus { border-color: var(--orange); }
+  #fl-root textarea.fl-iceberg-field { resize: none; overflow: hidden; line-height: 1.5; font-family: inherit; }
 
   /* 3S check */
   .fl-3s-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
@@ -178,7 +179,7 @@
     color: var(--orange); font-size: clamp(22px, 3.4vw, 30px); margin-bottom: 4px;
   }
   .fl-vision-hero .fl-vision-note { color: var(--ink-soft); font-size: 13.5px; font-style: italic; margin-bottom: 18px; }
-  .fl-vision-hero .fl-vision-label { font-size: 15px; color: var(--purple-dark); margin: 18px 0 8px; }
+  .fl-vision-hero .fl-vision-label { font-size: 30px; color: var(--purple-dark); margin: 18px 0 8px; }
   .fl-vision-hero .fl-vision-label:first-of-type { margin-top: 0; }
   .fl-vision-hero .fl-vision-textarea {
     width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px;
@@ -393,11 +394,11 @@
   const STORAGE_KEY = 'fogarty-legacy-manifesto-v1';
 
   const LENSES = [
-    { id: '3s', label: '3S', question: 'Sizeable, solvable, sorely overlooked?' },
-    { id: 'iceberg', label: 'Iceberg', question: "What's underneath the symptom?" },
-    { id: '5whys', label: '5 Whys', question: 'Why, five times — where do you land?' },
-    { id: 'vorp', label: 'VORP', question: "What do you bring that others wouldn't?" },
-    { id: 'toc', label: 'TOC', question: "What's the actual mechanism?" }
+    { id: '3s', label: '3S', question: 'Sizeable, solvable, sorely neglected?', detail: "A gut-check for whether this challenge deserves real time. Sizeable — how many people, how big a problem? Solvable — is there a credible path forward? Sorely Neglected — who else is already on this, and why hasn't it been fixed?" },
+    { id: 'iceberg', label: 'Iceberg', question: "What's underneath the symptom?", detail: "Most people stop at the symptom — the visible thing that first caught your attention. Push further: is this a Pattern (does it keep happening)? What Structure or incentive produces that pattern? What's the Root Cause — the layer underneath it all, the one worth changing?" },
+    { id: '5whys', label: '5 Whys', question: 'Why, five times — where do you land?', detail: "Ask why the symptom happens, then ask why about that answer — keep going, usually four or five rounds. You've gone far enough once the answer points to a system, not a person." },
+    { id: 'vorp', label: 'VORP', question: "What do you bring that others wouldn't?", detail: "Value Over Replacement, borrowed from sports analytics. The real question isn't \"am I good at this,\" it's \"would this happen anyway without me.\" Weigh Skill (could someone else do this?), Access (do you have a way in?), and Will (would you stick with it?) — it's the rare combination of all three that matters." },
+    { id: 'toc', label: 'TOC', question: "What's the actual mechanism?", detail: "Theory of Change — the one question the other four lenses don't answer alone. Trace it: Activities (what you do) → Outputs (what you produce) → Outcomes (what changes) → Impact (the goal). Comparing paths this way beats running with the first plausible idea." }
   ];
 
   const PATHWAYS = [
@@ -599,6 +600,7 @@
   }
   function lensLabel(id){ const l = LENSES.find(l => l.id === id); return l ? l.label : ''; }
   function lensQuestion(id){ const l = LENSES.find(l => l.id === id); return l ? l.question : ''; }
+  function lensDetail(id){ const l = LENSES.find(l => l.id === id); return l ? l.detail : ''; }
 
   function pathwayLabel(id){
     const p = PATHWAYS.find(p => p.id === id);
@@ -622,9 +624,9 @@
   function stakeholderLinesArray(text){ return linesArray(text, 6); }
 
   const ROOT_CAUSE_PLACEHOLDERS = [
-    'Most obvious root cause…',
-    'A second, if there is one…',
-    'A third, if there is one…'
+    'Key root cause…',
+    'A second, if there is…',
+    'A third, if there is…'
   ];
 
   function peerRowHtml(lines, idPrefix, placeholders, fieldKey){
@@ -662,11 +664,11 @@
     const cp = pct(CHALLENGE_POS[0], CHALLENGE_POS[1]);
     html += chipNodeHtml([challengeTitle], 'fl-challenge-chip', cp.left, cp.top);
     const sp = pct(SYMPTOM_POS[0], SYMPTOM_POS[1]);
-    html += chipNodeHtml([symptom], 'fl-symptom-chip', sp.left, sp.top);
+    html += chipNodeHtml((symptom||'').split('\n').filter(Boolean), 'fl-symptom-chip', sp.left, sp.top);
     const pp = pct(PATTERN_POS[0], PATTERN_POS[1]);
-    html += chipNodeHtml([pattern], 'fl-pattern-chip', pp.left, pp.top);
+    html += chipNodeHtml((pattern||'').split('\n').filter(Boolean), 'fl-pattern-chip', pp.left, pp.top);
     const stp = pct(STRUCTURE_POS[0], STRUCTURE_POS[1]);
-    html += chipNodeHtml([structure], 'fl-structure-chip', stp.left, stp.top);
+    html += chipNodeHtml((structure||'').split('\n').filter(Boolean), 'fl-structure-chip', stp.left, stp.top);
     for (let i=0;i<3;i++){
       const rp = pct(ROOTCAUSE_POS[i][0], ROOTCAUSE_POS[i][1]);
       html += chipNodeHtml([rootCauses[i]], 'fl-rootcause-chip', rp.left, rp.top);
@@ -786,7 +788,7 @@
     el.innerHTML = labels.map(l => {
       const locked = UNLOCKED_STAGES.indexOf(l.id) === -1;
       return '<button data-stage="'+l.id+'" class="'+(uiActive===l.id?'fl-active':'')+'"'+(locked?' disabled title="Unlocks at your next summit"':'')+' type="button">' +
-        '<span class="fl-num">'+l.n+'</span>'+l.t+(locked?' <span class="fl-lock-icon">&#128274;</span>':'')+
+        '<span class="fl-num">'+l.n+'</span>'+l.t+
       '</button>';
     }).join('');
     el.querySelectorAll('button').forEach(btn => {
@@ -822,40 +824,40 @@
     return '' +
     '<div class="fl-stage-head">' +
       '<div class="fl-kicker">Summit 1 &middot; Go deep on your challenge</div>' +
-      '<h2>Name your challenge</h2>' +
-      '<p>Frame your challenge and begin to deep dive.</p>' +
+      '<h2>Name your Challenge</h2>' +
+      '<p>Frame your challenge and begin to deep dive during the first session of Summit #1.</p>' +
     '</div>' +
 
     '<div class="fl-card" style="margin-bottom:28px;">' +
       '<label for="fl-s1-title">The challenge, in one sentence<span class="fl-hint">Name it plainly — you\'ll sharpen it as you go.</span></label>' +
       '<input type="text" id="fl-s1-title" value="'+escapeHtml(s.challengeTitle)+'" placeholder="e.g. Young West Australians are disengaging from democracy">' +
 
-      '<label>Select the ONE lens that fits best right now<span class="fl-hint">From Summit 1\'s opening session.</span></label>' +
+      '<label>Select the ONE lens that fits best right now<span class="fl-hint">Work through your own challenge and match it to a Lens.</span></label>' +
       '<div class="fl-pathway-options" id="fl-lens-options">' +
-        LENSES.map(l => '<button type="button" class="fl-pathway-opt'+(s.lens===l.id?' fl-selected':'')+'" data-lens="'+l.id+'"><strong>'+escapeHtml(l.label)+'</strong><span>'+escapeHtml(l.question)+'</span></button>').join('') +
+        LENSES.map(l => '<button type="button" class="fl-pathway-opt'+(s.lens===l.id?' fl-selected':'')+'" data-lens="'+l.id+'"><strong>'+escapeHtml(l.label)+'</strong><span>'+escapeHtml(l.detail)+'</span></button>').join('') +
       '</div>' +
-      '<label for="fl-s1-lens-reasoning" id="fl-lens-why-label">Why?<span class="fl-hint" id="fl-lens-why-hint">'+(lensQuestion(s.lens) ? 'Using the ' + escapeHtml(lensLabel(s.lens)) + ' lens: ' + escapeHtml(lensQuestion(s.lens)) : 'Pick a lens above, then explain your thinking.')+'</span></label>' +
+      '<label for="fl-s1-lens-reasoning" id="fl-lens-why-label">Why?<span class="fl-hint" id="fl-lens-why-hint">'+(lensDetail(s.lens) ? 'Using the ' + escapeHtml(lensLabel(s.lens)) + ' lens: ' + escapeHtml(lensDetail(s.lens)) : 'Pick a lens above, then explain your thinking.')+'</span></label>' +
       '<textarea id="fl-s1-lens-reasoning" rows="3" placeholder="Explain your thinking here…">'+escapeHtml(s.lensReasoning)+'</textarea>' +
-      '<label for="fl-s1-lens-reasoning-2">Anything else?<span class="fl-hint">Optional — no need to pick another lens, just capture another angle if one comes up.</span></label>' +
+      '<label for="fl-s1-lens-reasoning-2">Any other notes?<span class="fl-hint">Optional — no need to pick another lens, just capture another angle if one comes up.</span></label>' +
       '<textarea id="fl-s1-lens-reasoning-2" rows="3" placeholder="Another thought worth capturing…">'+escapeHtml(s.lensReasoning2)+'</textarea>' +
     '</div>' +
 
     '<div class="fl-stage-head">' +
       '<div class="fl-kicker">Iceberg Analysis</div>' +
-      '<h2>Go beneath the surface</h2>' +
-      '<p>Most people stop at the symptom. Walk down through what keeps happening, what system produces it, and the root cause underneath it all — the layer worth changing.</p>' +
+      '<h2>Go Beneath the Surface of the Challenge</h2>' +
+      '<p>Most people stop at the surface of the challenge. Walk down through the symptoms, what keeps happening, what systems produce it, and the root cause/s underneath it all — the layer worth changing.</p>' +
     '</div>' +
     '<div class="fl-grid fl-iceberg-grid">' +
       '<div class="fl-card fl-visual-card" id="fl-tree-container">' + buildIcebergHtml(s.challengeTitle, s.symptom, s.pattern, s.structure, rootLinesArray(s.rootCauses)) + '</div>' +
       '<div class="fl-card fl-iceberg-form-card">' +
-        '<label for="fl-s1-symptom">Symptom<span class="fl-hint">The visible thing that first caught your attention.</span></label>' +
-        '<input type="text" id="fl-s1-symptom" value="'+escapeHtml(s.symptom)+'" placeholder="e.g. Falling youth voter turnout">' +
+        '<label for="fl-s1-symptom">Symptoms &amp; Events<span class="fl-hint">The urgent, visible issue that caught your attention first — reacting to it alone rarely produces a lasting fix.</span></label>' +
+        '<textarea id="fl-s1-symptom" class="fl-iceberg-field" rows="1" placeholder="e.g. Falling youth voter turnout">'+escapeHtml(s.symptom)+'</textarea>' +
 
-        '<label for="fl-s1-pattern">Pattern<span class="fl-hint">Does this keep happening, or was it a one-off?</span></label>' +
-        '<input type="text" id="fl-s1-pattern" value="'+escapeHtml(s.pattern)+'" placeholder="e.g. Turnout has fallen every election since 2010">' +
+        '<label for="fl-s1-pattern">Patterns &amp; Trends<span class="fl-hint">The recurring trend or cycle over time, revealing rhythms and tipping points a single event can\'t show.</span></label>' +
+        '<textarea id="fl-s1-pattern" class="fl-iceberg-field" rows="1" placeholder="e.g. Turnout has fallen every election since 2010">'+escapeHtml(s.pattern)+'</textarea>' +
 
-        '<label for="fl-s1-structure">Structure<span class="fl-hint">What system or incentive is producing that pattern?</span></label>' +
-        '<input type="text" id="fl-s1-structure" value="'+escapeHtml(s.structure)+'" placeholder="e.g. Civic education isn\'t part of the curriculum">' +
+        '<label for="fl-s1-structure">Structure<span class="fl-hint">The rules, roles, and relationships creating feedback loops that reinforce the pattern you\'re seeing.</span></label>' +
+        '<textarea id="fl-s1-structure" class="fl-iceberg-field" rows="1" placeholder="e.g. Civic education isn\'t part of the curriculum">'+escapeHtml(s.structure)+'</textarea>' +
 
         '<label>Root cause<span class="fl-hint">The layer underneath — the one worth changing. List up to 3 if there\'s more than one.</span></label>' +
         rootCauseGroupHtml(s.rootCauses) +
@@ -865,8 +867,9 @@
     '</div>' +
 
     '<div class="fl-stage-head" style="margin-top:20px;">' +
-      '<div class="fl-kicker">Map your stakeholders</div>' +
-      '<p>Who else has a stake in this challenge? Add stakeholders you could reach out to invite to your roundtable during Summit #3.</p>' +
+      '<div class="fl-kicker">BUILD NETWORKS WHO CAN HELP</div>' +
+      '<h2>Map your stakeholders</h2>' +
+      '<p>Who are the people who have a stake in this challenge? They could be working within the sector or for an organisation that is already trying to address the challenge. These are the stakeholders for you to reach out to invite to your group\'s roundtable during Summit #3.</p>' +
     '</div>' +
     '<div class="fl-card" id="fl-stakemap-container">' + buildStakeholderMapHtml(stakeholderLinesArray(s.stakeholders)) + '</div>' +
     '<div class="fl-card" style="margin-top:16px;">' + stakeholderGroupHtml(s.stakeholders) + '</div>' +
@@ -875,7 +878,7 @@
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
       '<p class="fl-vision-note">This is a first draft — you\'ll flesh this out over the next five weeks.</p>' +
       '<label for="fl-s1-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
-      '<textarea id="fl-s1-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future.">'+escapeHtml(s.vision)+'</textarea>' +
+      '<textarea id="fl-s1-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future, not passive observers of it. By 2050, young people are engaged in civic life from an early age, equipped with the knowledge and confidence to contribute their voice, and WA\'s decision-makers reflect the full diversity of the generation they represent.">'+escapeHtml(s.vision)+'</textarea>' +
     '</div>';
   }
 
@@ -893,6 +896,17 @@
         data.summit1[key] = node.value;
         scheduleSave();
         if (key === 'challengeTitle' || key === 'symptom' || key === 'pattern' || key === 'structure') refreshTreeVisual();
+      });
+    });
+    [sy, pa, st2].forEach(ta => {
+      ta.rows = Math.min(3, Math.max(1, ta.value.split('\n').length));
+      ta.addEventListener('input', () => {
+        ta.rows = Math.min(3, Math.max(1, ta.value.split('\n').length));
+      });
+      ta.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && ta.value.split('\n').length >= 3) {
+          e.preventDefault();
+        }
       });
     });
     document.querySelectorAll('#fl-stage-summit1 .fl-rootcause-textarea').forEach(ta => {
@@ -928,7 +942,7 @@
         data.summit1.lens = id;
         document.querySelectorAll('#fl-lens-options .fl-pathway-opt').forEach(b => b.classList.toggle('fl-selected', b.dataset.lens === id));
         const hint = document.getElementById('fl-lens-why-hint');
-        if (hint) hint.textContent = 'Using the ' + lensLabel(id) + ' lens: ' + lensQuestion(id);
+        if (hint) hint.textContent = 'Using the ' + lensLabel(id) + ' lens: ' + lensDetail(id);
         scheduleSave();
       });
     });
@@ -1008,7 +1022,7 @@
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
       '<p class="fl-vision-note">Revisit and sharpen this as your thinking develops.</p>' +
       '<label for="fl-s2-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
-      '<textarea id="fl-s2-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
+      '<textarea id="fl-s2-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future, not passive observers of it. By 2050, young people are engaged in civic life from an early age, equipped with the knowledge and confidence to contribute their voice, and WA\'s decision-makers reflect the full diversity of the generation they represent.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
     '</div>';
   }
 
@@ -1113,7 +1127,7 @@
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
       '<p class="fl-vision-note">Revisit and sharpen this one final time before it becomes part of your WA2050 Manifesto.</p>' +
       '<label for="fl-s3-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
-      '<textarea id="fl-s3-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
+      '<textarea id="fl-s3-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future, not passive observers of it. By 2050, young people are engaged in civic life from an early age, equipped with the knowledge and confidence to contribute their voice, and WA\'s decision-makers reflect the full diversity of the generation they represent.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
     '</div>';
   }
 
@@ -1174,7 +1188,7 @@
   // ---- Manifesto stage ----
   function draftBrief(){
     const s1 = data.summit1, s2 = data.summit2, s3 = data.summit3;
-    data.brief.challengeText = 'We believe Western Australia faces a challenge of ' + (s1.challengeTitle || '[your challenge]') + '. At its core, this is driven by ' + (joinLines(s1.rootCauses, '; ') || '[root cause]') + '. Without action, ' + (s1.symptom || '[symptom]') + ' will continue' + (s3.why ? '. This matters to us personally: ' + s3.why : '') + '.';
+    data.brief.challengeText = 'We believe Western Australia faces a challenge of ' + (s1.challengeTitle || '[your challenge]') + '. At its core, this is driven by ' + (joinLines(s1.rootCauses, '; ') || '[root cause]') + '. Without action, ' + (joinLines(s1.symptom, '; ') || '[symptom]') + ' will continue' + (s3.why ? '. This matters to us personally: ' + s3.why : '') + '.';
     data.brief.visionText = (s1.vision || 'A WA where…') + ' We believe this is possible because ' + (s2.possibleBecause || '[evidence or reason for hope]') + (s3.how ? ' ' + s3.how : '') + '.';
     data.brief.pathwayText = 'The most effective pathway to create this change is through ' + (pathwayLabels(s2.pathways) || '[your chosen pathway]') + '. Our role in pursuing it is to ' + (s2.commitment || '[your commitment]') + '.' + (s3.what ? ' Specifically: ' + s3.what : '');
   }
@@ -1384,28 +1398,29 @@
     return (fullName||'').trim().split(/\s+/)[0] || '[Name]';
   }
 
-  function outreachTemplateText(method, name, position, challenge, groupName){
+  function outreachTemplateText(method, name, position, challenge, groupName, vision){
     const n = firstName(name);
     const p = position || 'your organisation';
-    const c = challenge || 'our challenge';
-    const g = groupName || 'our group';
+    const c = challenge || 'my challenge';
+    const g = groupName || '[Your name]';
     if (method === 'linkedin') {
-      return 'Hi ' + n + ', I\'m a WA2050 Scholar working on ' + c + '. Would love to connect — hoping to invite you to a Summit #3 roundtable soon!';
+      return 'Hi ' + n + ', I\'m a [Fogarty/Winthrop] Scholar at UWA, working on ' + c + '. Would love to connect, and invite you to our roundtable on 10 Sept!';
     }
-    return 'Subject: Invitation to a Leadership Legacy Roundtable — ' + c + '\n\n' +
+    const workBit = (vision && vision.trim()) ? ('My vision for this is: ' + vision.trim() + '\n\n') : '';
+    return 'Subject: Invitation to a Leadership Legacy Roundtable, ' + c + '\n\n' +
       'Dear ' + n + ',\n\n' +
-      'My name is ' + g + ', and we\'re a Scholar group in the Fogarty Foundation\'s Leadership Legacy program — a leadership development initiative run through Fogarty Ripple for young West Australians who are working on real challenges facing the state.\n\n' +
-      'Over five weeks, our group has been going deep on the challenge of ' + c + ': understanding its root causes, developing a vision for what Western Australia could look like if meaningful progress is made, and identifying the most effective pathway to drive that change.\n\n' +
-      'As part of Summit #3 of the program, we\'re hosting a roundtable discussion where we present our thinking to relevant sector leaders and stakeholders, and gather feedback before finalising our WA2050 Manifesto — a document that will be presented at Ripple Legacy Night to a panel of distinguished WA leaders.\n\n' +
-      'Given your role and experience as ' + p + ', we believe your perspective would be incredibly valuable to us, and we\'d love to invite you to join the roundtable, or alternatively have a short conversation with our group beforehand.\n\n' +
-      'Would you be available, or open to a brief chat? We\'d really appreciate the opportunity to learn from you.\n\n' +
-      'Thank you for considering,\n' + g;
+      'My name is ' + g + ', and I\'m a [Fogarty/Winthrop] Scholar at UWA, taking part in the Fogarty Ripple program, a leadership and enterprise accelerator for high-achieving students.\n\n' +
+      'As part of the program\'s Leadership Legacy stream, I\'m working on a challenge closely related to your work area: ' + c + '.\n\n' +
+      workBit +
+      'I\'d love to invite you to our stakeholder roundtable on 10th September, or if that doesn\'t work, just have a chat beforehand. Given your experience as ' + p + ', I think your perspective would be really valuable.\n\n' +
+      'Would you be available, or open to a brief conversation?\n\n' +
+      'Kind regards,\n' + g;
   }
 
   function updateOutreachText(){
     const lines = stakeholderLinesArray(data.summit1.stakeholders);
     const np = stakeholderNamePos(lines[outreachIdx]);
-    const text = outreachTemplateText(outreachMethod, np.name, np.position, data.summit1.challengeTitle, data.meta.name);
+    const text = outreachTemplateText(outreachMethod, np.name, np.position, data.summit1.challengeTitle, data.meta.name, data.summit1.vision);
     document.getElementById('fl-outreach-text').value = text;
     const counter = document.getElementById('fl-outreach-charcount');
     if (counter) {
