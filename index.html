@@ -87,7 +87,9 @@
   }
   #fl-stepper button.fl-active { border-color: var(--orange); color: var(--purple-dark); background: #FFF6EC; }
   #fl-stepper button.fl-active .fl-num { background: var(--orange); color: #fff; }
-  #fl-stepper button:hover { border-color: var(--orange); }
+  #fl-stepper button:not(:disabled):hover { border-color: var(--orange); }
+  #fl-stepper button:disabled { opacity: .45; cursor: not-allowed; }
+  .fl-lock-icon { font-size: 10.5px; margin-left: 2px; }
 
   /* Cards / layout */
   #fl-root .fl-stage { display: none; animation: flFade .35s ease; }
@@ -477,6 +479,9 @@
   let uiActive = 'summit1';
   let uiStoryView = 'story';
   let uiPathwayTab = 'enterprise';
+
+  // To unlock a stage, just add its id here — nothing else needs to change.
+  const UNLOCKED_STAGES = ['summit1'];
   let data = null;
   let storageAvailable = true;
 
@@ -778,12 +783,14 @@
       { id: 'manifesto', n: 4, t: 'My WA2050 Manifesto' }
     ];
     const el = document.getElementById('fl-stepper');
-    el.innerHTML = labels.map(l =>
-      '<button data-stage="'+l.id+'" class="'+(uiActive===l.id?'fl-active':'')+'" type="button">' +
-        '<span class="fl-num">'+l.n+'</span>'+l.t+
-      '</button>'
-    ).join('');
+    el.innerHTML = labels.map(l => {
+      const locked = UNLOCKED_STAGES.indexOf(l.id) === -1;
+      return '<button data-stage="'+l.id+'" class="'+(uiActive===l.id?'fl-active':'')+'"'+(locked?' disabled title="Unlocks at your next summit"':'')+' type="button">' +
+        '<span class="fl-num">'+l.n+'</span>'+l.t+(locked?' <span class="fl-lock-icon">&#128274;</span>':'')+
+      '</button>';
+    }).join('');
     el.querySelectorAll('button').forEach(btn => {
+      if (btn.disabled) return;
       btn.addEventListener('click', () => { uiActive = btn.dataset.stage; render(); });
     });
   }
