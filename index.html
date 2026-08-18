@@ -135,11 +135,14 @@
   #fl-root .fl-peer-item:focus-within { border-color: var(--orange); }
 
   /* Root cause columns — tall, side by side, each grows downward */
-  .fl-rootcause-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+  .fl-rootcause-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; flex: 1; }
   .fl-rootcause-col { flex: 1; min-width: 140px; display: flex; flex-direction: column; }
   .fl-rootcause-col .fl-root-num { margin-bottom: 4px; }
-  .fl-rootcause-col textarea.fl-rootcause-textarea { width: 100%; min-height: 130px; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 13.5px; resize: vertical; background: var(--paper); }
+  .fl-rootcause-col textarea.fl-rootcause-textarea { width: 100%; flex: 1; min-height: 130px; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 13.5px; resize: vertical; background: var(--paper); }
   .fl-rootcause-col textarea.fl-rootcause-textarea:focus { border-color: var(--orange); outline: none; }
+
+  .fl-iceberg-grid { align-items: stretch; }
+  .fl-iceberg-form-card { display: flex; flex-direction: column; }
 
   .fl-stake-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px; }
   @media (max-width: 480px) { .fl-stake-grid { grid-template-columns: 1fr; } }
@@ -147,6 +150,20 @@
   .fl-stake-card .fl-root-num { display: block; margin-bottom: 4px; }
   .fl-stake-card input { width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; font-size: 13px; margin-top: 6px; background: var(--paper); }
   .fl-stake-card input:focus { border-color: var(--orange); outline: none; }
+  .fl-outreach-btn { margin-top: 8px; width: 100%; border: 1.5px solid var(--orange); background: #FFF6EC; color: var(--orange); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-weight: 700; }
+  .fl-outreach-btn:hover { background: var(--orange); color: #fff; }
+
+  .fl-outreach-overlay { display: none; position: fixed; inset: 0; background: rgba(28,18,35,.5); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .fl-outreach-overlay.fl-open { display: flex; }
+  .fl-outreach-modal { background: var(--paper-card); border-radius: 18px; padding: 26px; max-width: 540px; width: 100%; max-height: 85vh; overflow-y: auto; }
+  .fl-outreach-modal h3 { margin: 0 0 4px; color: var(--purple-dark); font-size: 19px; }
+  .fl-outreach-modal .fl-outreach-sub { color: var(--ink-soft); font-size: 12.5px; margin-bottom: 14px; }
+  .fl-outreach-methods { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .fl-outreach-method-btn { border: 1.5px solid var(--line); background: var(--paper-card); border-radius: 999px; padding: 7px 14px; font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+  .fl-outreach-method-btn.fl-active { border-color: var(--orange); background: #FFF6EC; color: var(--purple-dark); }
+  .fl-outreach-text { width: 100%; min-height: 260px; border: 1.5px solid var(--line); border-radius: 10px; padding: 12px; font-size: 13.5px; white-space: pre-wrap; background: var(--paper); resize: vertical; }
+  .fl-outreach-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+  .fl-outreach-status { font-size: 12px; color: var(--ink-soft); }
 
   /* Standout Legacy Vision / Roundtable Feedback section */
   .fl-vision-hero {
@@ -170,18 +187,18 @@
   /* Problem tree visual (SVG + overlaid chips) */
   .fl-tree3 { position: relative; width: 100%; max-width: 400px; margin: 0 auto; aspect-ratio: 340 / 680; }
   .fl-tree3-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .fl-tree3 .fl-t3-node { position: absolute; transform: translate(-50%, -50%); z-index: 2; }
+  .fl-tree3 .fl-t3-node { position: absolute; transform: translate(-50%, -50%); z-index: 2; width: max-content; }
   .fl-tree3 .fl-t3-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); opacity: .7; }
   .fl-tree3 .fl-tree-chip { font-size: 11px; padding: 5px 9px; border-radius: 8px; font-weight: 700; max-width: 105px; text-align: center; line-height: 1.3; box-shadow: 0 1px 3px rgba(0,0,0,.08); white-space: normal; overflow-wrap: break-word; word-break: break-word; }
   .fl-tree3 .fl-tree-chip .fl-chip-divider { border-top: 1px dashed rgba(0,0,0,.18); margin: 4px 0; }
-  .fl-tree3 .fl-challenge-chip { background: var(--orange); color: #fff; font-weight: 800; max-width: 210px; font-size: 11.5px; }
-  .fl-tree3 .fl-symptom-chip { background: #EAF3FB; color: #1D4E73; max-width: 145px; }
-  .fl-tree3 .fl-pattern-chip { background: #D6E9F7; color: #164A6E; max-width: 150px; }
-  .fl-tree3 .fl-structure-chip { background: #B8D9EF; color: #123F60; font-size: 10.5px; max-width: 150px; }
-  .fl-tree3 .fl-rootcause-chip { background: #E8F6FC; color: #0B3D62; font-size: 10px; max-width: 115px; font-weight: 800; }
+  .fl-tree3 .fl-challenge-chip { background: var(--orange); color: #fff; font-weight: 800; max-width: 230px; font-size: 11.5px; }
+  .fl-tree3 .fl-symptom-chip { background: #EAF3FB; color: #1D4E73; max-width: 210px; }
+  .fl-tree3 .fl-pattern-chip { background: #D6E9F7; color: #164A6E; max-width: 210px; }
+  .fl-tree3 .fl-structure-chip { background: #B8D9EF; color: #123F60; font-size: 10.5px; max-width: 210px; }
+  .fl-tree3 .fl-rootcause-chip { background: #E8F6FC; color: #0B3D62; font-size: 10px; max-width: 130px; font-weight: 800; }
 
-  .fl-stakemap { position: relative; width: 100%; max-width: 340px; margin: 0 auto; aspect-ratio: 400 / 400; }
-  .fl-stakemap .fl-tree-chip.fl-stake-chip { background: #FFF6EC; color: var(--purple-dark); max-width: 95px; font-size: 10.5px; }
+  .fl-stakemap { position: relative; width: 100%; max-width: 480px; margin: 0 auto; aspect-ratio: 500 / 500; }
+  .fl-stakemap .fl-tree-chip.fl-stake-chip { background: #FFF6EC; color: var(--purple-dark); max-width: 140px; font-size: 10.5px; }
 
   .fl-goldencircle { width: 100%; max-width: 280px; margin: 0 auto; }
   .fl-goldencircle svg { width: 100%; height: auto; display: block; }
@@ -322,7 +339,7 @@
 
 <div id="fl-root">
   <div id="fl-app">
-    <div id="fl-storage-warning">Your browser isn't saving progress right now (private/incognito mode or storage is disabled). You can keep working, but refreshing or closing this tab may lose your answers — download your Word brief often as a backup.</div>
+    <div id="fl-storage-warning">Your browser isn't saving progress right now (private/incognito mode or storage is disabled). You can keep working, but refreshing or closing this tab may lose your answers — download your Word Manifesto often as a backup.</div>
 
     <div id="fl-progress-bar">
       <div class="fl-progress-title">Working across devices?</div>
@@ -347,6 +364,25 @@
 
     <div id="fl-stepper"></div>
     <div id="fl-stages"></div>
+
+    <div class="fl-outreach-overlay" id="fl-outreach-overlay">
+      <div class="fl-outreach-modal">
+        <h3 id="fl-outreach-title">Reach out</h3>
+        <p class="fl-outreach-sub">Pick how you're reaching out — the template updates to match.</p>
+        <div class="fl-outreach-methods" id="fl-outreach-methods">
+          <button type="button" class="fl-outreach-method-btn" data-method="linkedin">Connect on LinkedIn</button>
+          <button type="button" class="fl-outreach-method-btn" data-method="email">Email</button>
+        </div>
+        <textarea class="fl-outreach-text" id="fl-outreach-text" readonly></textarea>
+        <div id="fl-outreach-charcount" class="fl-outreach-status" style="margin-top:6px;"></div>
+        <div class="fl-outreach-actions">
+          <button class="fl-btn fl-btn-primary" id="fl-outreach-copy" type="button">Copy text</button>
+          <button class="fl-btn fl-btn-ghost" id="fl-outreach-close" type="button">Close</button>
+          <span class="fl-outreach-status" id="fl-outreach-status"></span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -375,16 +411,47 @@
   const ICEBERG_SVG =
     '<svg class="fl-tree3-lines" viewBox="0 0 340 680" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
       '<defs>' +
+        '<linearGradient id="flSky" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0" stop-color="#CFE6F7"/>' +
+          '<stop offset="1" stop-color="#EEF6FC"/>' +
+        '</linearGradient>' +
         '<linearGradient id="flWater" x1="0" y1="0" x2="0" y2="1">' +
           '<stop offset="0" stop-color="#BFE0F2"/>' +
           '<stop offset="1" stop-color="#0B3D62"/>' +
         '</linearGradient>' +
+        '<linearGradient id="flIceTip" x1="0" y1="0" x2="1" y2="0.3">' +
+          '<stop offset="0" stop-color="#FFFFFF"/>' +
+          '<stop offset="0.55" stop-color="#EAF4FB"/>' +
+          '<stop offset="1" stop-color="#C9E0EF"/>' +
+        '</linearGradient>' +
+        '<linearGradient id="flIceBody" x1="0" y1="0" x2="1" y2="0.6">' +
+          '<stop offset="0" stop-color="#F7FBFD"/>' +
+          '<stop offset="0.5" stop-color="#DCEEF7"/>' +
+          '<stop offset="1" stop-color="#A9D2E8"/>' +
+        '</linearGradient>' +
       '</defs>' +
-      '<rect x="0" y="0" width="340" height="220" fill="#EAF3FB"/>' +
+      '<rect x="0" y="0" width="340" height="220" fill="url(#flSky)"/>' +
+      '<g opacity=".8">' +
+        '<ellipse cx="60" cy="55" rx="34" ry="12" fill="#FFFFFF"/><ellipse cx="88" cy="50" rx="24" ry="10" fill="#FFFFFF"/>' +
+        '<ellipse cx="270" cy="90" rx="30" ry="10" fill="#FFFFFF"/><ellipse cx="295" cy="95" rx="20" ry="9" fill="#FFFFFF"/>' +
+      '</g>' +
       '<rect x="0" y="220" width="340" height="460" fill="url(#flWater)"/>' +
+      '<path d="M0,222 Q85,215 170,222 T340,222" fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity=".5"/>' +
       '<line x1="0" y1="220" x2="340" y2="220" stroke="#FFFFFF" stroke-width="1" opacity=".6"/>' +
-      '<path d="M150,220 L145,180 L160,140 L170,110 L182,145 L195,185 L190,220 Z" fill="#F4FAFE" stroke="#B8D4E8" stroke-width="1"/>' +
-      '<path d="M150,220 Q100,260 90,300 Q60,400 100,460 Q140,540 170,545 Q200,540 240,460 Q280,400 250,300 Q240,260 190,220 Z" fill="#FFFFFF" opacity=".5" stroke="#DCEEFA" stroke-width="1"/>' +
+
+      '<path d="M110,220 L100,195 L118,175 L108,150 L135,130 L128,110 L155,100 L145,125 L170,115 L185,140 L175,165 L200,180 L210,200 L230,220 Z" fill="url(#flIceTip)" stroke="#9FC3DC" stroke-width="1.2"/>' +
+      '<g stroke="#9FC3DC" stroke-width="1" opacity=".55" fill="none">' +
+        '<path d="M118,175 L112,220"/>' +
+        '<path d="M155,100 L155,220"/>' +
+        '<path d="M185,140 L192,220"/>' +
+      '</g>' +
+
+      '<path d="M110,220 L70,280 L50,340 L75,410 L60,470 L110,520 L150,555 L190,555 L230,520 L280,470 L265,410 L290,340 L270,280 L230,220 Z" fill="url(#flIceBody)" opacity=".92" stroke="#9FC3DC" stroke-width="1.2"/>' +
+      '<g stroke="#9FC3DC" stroke-width="1" opacity=".4" fill="none">' +
+        '<path d="M130,225 L100,300 L90,380 L110,460 L130,520"/>' +
+        '<path d="M170,225 L168,320 L170,420 L170,500 L170,545"/>' +
+        '<path d="M210,225 L245,300 L255,380 L235,460 L210,520"/>' +
+      '</g>' +
       '<circle cx="120" cy="330" r="3" fill="#FFFFFF" opacity=".5"/>' +
       '<circle cx="220" cy="400" r="2.5" fill="#FFFFFF" opacity=".4"/>' +
       '<circle cx="160" cy="460" r="2" fill="#FFFFFF" opacity=".4"/>' +
@@ -394,13 +461,13 @@
   const SYMPTOM_POS = [170,160];
   const PATTERN_POS = [170,260];
   const STRUCTURE_POS = [170,380];
-  const ROOTCAUSE_POS = [[170,555],[100,480],[240,480]];
+  const ROOTCAUSE_POS = [[170,570],[55,490],[285,490]];
 
-  const STAKE_PINS = [[200,50],[340,110],[360,260],[260,360],[100,350],[50,180]];
+  const STAKE_PINS = [[200,53],[343,27],[460,131],[447,313],[291,417],[57,235]];
   const STAKE_COLORS = ['#FF8121','#51255A','#3B7A5A','#51255A','#FF8121','#3B7A5A'];
-  const STAKE_HUB = [200,210];
+  const STAKE_HUB = [200,300];
   const STAKEHOLDER_SVG =
-    '<svg class="fl-tree3-lines" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
+    '<svg class="fl-tree3-lines" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">' +
       STAKE_PINS.map((p,i) => '<line x1="'+STAKE_HUB[0]+'" y1="'+STAKE_HUB[1]+'" x2="'+p[0]+'" y2="'+p[1]+'" stroke="'+STAKE_COLORS[i]+'" stroke-width="3" stroke-linecap="round" opacity=".9"/>').join('') +
       STAKE_PINS.map((p,i) => '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="11" fill="'+STAKE_COLORS[i]+'" stroke="#FFFFFF" stroke-width="2"/>').join('') +
       '<circle cx="'+STAKE_HUB[0]+'" cy="'+STAKE_HUB[1]+'" r="28" fill="#3D3D3D" stroke="#FFFFFF" stroke-width="2"/>' +
@@ -538,7 +605,7 @@
 
   // ---------- Problem tree visual ----------
   function pct(x,y){ return { left: (x/340*100).toFixed(2)+'%', top: (y/680*100).toFixed(2)+'%' }; }
-  function pctStake(x,y){ return { left: (x/400*100).toFixed(2)+'%', top: (y/400*100).toFixed(2)+'%' }; }
+  function pctStake(x,y){ return { left: (x/500*100).toFixed(2)+'%', top: (y/500*100).toFixed(2)+'%' }; }
 
   function linesArray(text, n){
     const lines = (text || '').split('\n');
@@ -627,6 +694,7 @@
         '<span class="fl-root-num">'+(i+1)+'.</span>' +
         '<input type="text" class="fl-stake-name" data-idx="'+i+'" value="'+escapeHtml(np.name)+'" placeholder="Name">' +
         '<input type="text" class="fl-stake-position" data-idx="'+i+'" value="'+escapeHtml(np.position)+'" placeholder="Position / organisation">' +
+        '<button type="button" class="fl-outreach-btn" data-idx="'+i+'">Reach out &rarr;</button>' +
       '</div>';
     }
     html += '</div>';
@@ -636,10 +704,15 @@
   function buildStakeholderMapHtml(lines){
     let html = '<div class="fl-tree3 fl-stakemap">' + STAKEHOLDER_SVG;
     for (let i=0;i<6;i++){
-      const text = stakeholderName(lines[i]).trim();
-      if (!text) continue;
+      const np = stakeholderNamePos(lines[i]);
+      const name = (np.name||'').trim();
+      const position = (np.position||'').trim();
+      if (!name && !position) continue;
       const p = pctStake(STAKE_PINS[i][0], STAKE_PINS[i][1] - 26);
-      html += '<div class="fl-t3-node" style="left:'+p.left+';top:'+p.top+';"><div class="fl-tree-chip fl-stake-chip">'+escapeHtml(text)+'</div></div>';
+      html += '<div class="fl-t3-node" style="left:'+p.left+';top:'+p.top+';"><div class="fl-tree-chip fl-stake-chip">' +
+        (name ? '<div>'+escapeHtml(name)+'</div>' : '') +
+        (position ? '<div class="fl-chip-divider"></div><div style="font-weight:600; opacity:.8;">'+escapeHtml(position)+'</div>' : '') +
+      '</div></div>';
     }
     html += '</div>';
     return html;
@@ -702,7 +775,7 @@
       { id: 'summit1', n: 1, t: 'Summit 1' },
       { id: 'summit2', n: 2, t: 'Summit 2' },
       { id: 'summit3', n: 3, t: 'Summit 3' },
-      { id: 'manifesto', n: 4, t: 'My Legacy Brief' }
+      { id: 'manifesto', n: 4, t: 'My WA2050 Manifesto' }
     ];
     const el = document.getElementById('fl-stepper');
     el.innerHTML = labels.map(l =>
@@ -765,9 +838,9 @@
       '<h2>Go beneath the surface</h2>' +
       '<p>Most people stop at the symptom. Walk down through what keeps happening, what system produces it, and the root cause underneath it all — the layer worth changing.</p>' +
     '</div>' +
-    '<div class="fl-grid">' +
+    '<div class="fl-grid fl-iceberg-grid">' +
       '<div class="fl-card fl-visual-card" id="fl-tree-container">' + buildIcebergHtml(s.challengeTitle, s.symptom, s.pattern, s.structure, rootLinesArray(s.rootCauses)) + '</div>' +
-      '<div class="fl-card">' +
+      '<div class="fl-card fl-iceberg-form-card">' +
         '<label for="fl-s1-symptom">Symptom<span class="fl-hint">The visible thing that first caught your attention.</span></label>' +
         '<input type="text" id="fl-s1-symptom" value="'+escapeHtml(s.symptom)+'" placeholder="e.g. Falling youth voter turnout">' +
 
@@ -788,10 +861,8 @@
       '<div class="fl-kicker">Map your stakeholders</div>' +
       '<p>Who else has a stake in this challenge? Add stakeholders you could reach out to invite to your roundtable during Summit #3.</p>' +
     '</div>' +
-    '<div class="fl-grid">' +
-      '<div class="fl-card fl-visual-card" id="fl-stakemap-container">' + buildStakeholderMapHtml(stakeholderLinesArray(s.stakeholders)) + '</div>' +
-      '<div class="fl-card">' + stakeholderGroupHtml(s.stakeholders) + '</div>' +
-    '</div>' +
+    '<div class="fl-card" id="fl-stakemap-container">' + buildStakeholderMapHtml(stakeholderLinesArray(s.stakeholders)) + '</div>' +
+    '<div class="fl-card" style="margin-top:16px;">' + stakeholderGroupHtml(s.stakeholders) + '</div>' +
 
     '<div class="fl-vision-hero">' +
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
@@ -840,6 +911,9 @@
       };
       nameInput.addEventListener('input', update);
       posInput.addEventListener('input', update);
+    });
+    document.querySelectorAll('#fl-stage-summit1 .fl-outreach-btn').forEach(btn => {
+      btn.addEventListener('click', () => openOutreachModal(+btn.dataset.idx));
     });
     document.querySelectorAll('#fl-lens-options .fl-pathway-opt').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1030,7 +1104,7 @@
 
     '<div class="fl-vision-hero">' +
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
-      '<p class="fl-vision-note">Revisit and sharpen this one final time before it becomes part of your Legacy Brief.</p>' +
+      '<p class="fl-vision-note">Revisit and sharpen this one final time before it becomes part of your WA2050 Manifesto.</p>' +
       '<label for="fl-s3-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
       '<textarea id="fl-s3-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
     '</div>';
@@ -1106,17 +1180,17 @@
   function manifestoHtml(){
     if (!hasAnyContent()){
       return '<div class="fl-stage-head">' +
-        '<div class="fl-kicker">My Legacy Brief</div>' +
-        '<h2>Your Legacy Brief will take shape here</h2>' +
-        '<p>Come back once you\'ve worked through Summits #1-3 - this is where it all comes together into your Legacy Brief and your vision to be presented at Ripple Legacy Night.</p>' +
+        '<div class="fl-kicker">My WA2050 Manifesto</div>' +
+        '<h2>Your WA2050 Manifesto will take shape here</h2>' +
+        '<p>Come back once you\'ve worked through Summits #1-3 - this is where it all comes together into your WA2050 Manifesto and your vision to be presented at Ripple Legacy Night.</p>' +
       '</div>';
     }
     const b = data.brief;
     return '' +
     '<div class="fl-stage-head">' +
-      '<div class="fl-kicker">My Legacy Brief</div>' +
+      '<div class="fl-kicker">My WA2050 Manifesto</div>' +
       '<h2>Bring it together</h2>' +
-      '<p>Draft your three-part Legacy Brief from your summit answers, then polish the wording. This becomes both your printed Legacy Brief and your Legacy Night story.</p>' +
+      '<p>Draft your three-part WA2050 Manifesto from your summit answers, then polish the wording. This becomes both your printed Manifesto and your Legacy Night story.</p>' +
     '</div>' +
 
     '<div class="fl-brief-editor fl-card">' +
@@ -1127,17 +1201,17 @@
       '<div class="fl-brief-field"><label for="fl-brief-vision">The Vision — WA 2050</label><textarea id="fl-brief-vision">'+escapeHtml(b.visionText)+'</textarea></div>' +
       '<div class="fl-brief-field"><label for="fl-brief-pathway">The Pathway to Change</label><textarea id="fl-brief-pathway">'+escapeHtml(b.pathwayText)+'</textarea></div>' +
       '<div class="fl-submit-row">' +
-        '<button class="fl-btn fl-btn-primary" id="fl-submit-btn" type="button">'+(b.submitted ? 'Update my submission' : 'Submit my Legacy Brief')+'</button>' +
+        '<button class="fl-btn fl-btn-primary" id="fl-submit-btn" type="button">'+(b.submitted ? 'Update my submission' : 'Submit my WA2050 Manifesto')+'</button>' +
         '<span class="fl-submit-status" id="fl-submit-status">'+(b.submitted ? 'Submitted ' + new Date(b.submittedAt).toLocaleString('en-AU', { dateStyle: 'medium', timeStyle: 'short' }) : 'Not yet submitted')+'</span>' +
       '</div>' +
-      '<p class="fl-shared-hint">Submitting downloads your Legacy Brief as a Word document — email that file to your program coordinator to complete your submission.</p>' +
+      '<p class="fl-shared-hint">Submitting downloads your WA2050 Manifesto as a Word document — email that file to your program coordinator to complete your submission.</p>' +
       '<div class="fl-savebar"></div>' +
     '</div>' +
 
     '<div class="fl-view-toggle">' +
       '<button class="fl-btn fl-btn-ghost'+(uiStoryView==='story'?' fl-btn-on':'')+'" id="fl-view-story" type="button">Story view</button>' +
-      '<button class="fl-btn fl-btn-ghost'+(uiStoryView==='brief'?' fl-btn-on':'')+'" id="fl-view-brief" type="button">Printed brief view</button>' +
-      '<button class="fl-btn fl-btn-primary" id="fl-download-doc" type="button">Download Word brief (.doc)</button>' +
+      '<button class="fl-btn fl-btn-ghost'+(uiStoryView==='brief'?' fl-btn-on':'')+'" id="fl-view-brief" type="button">Printed Manifesto view</button>' +
+      '<button class="fl-btn fl-btn-primary" id="fl-download-doc" type="button">Download Word Manifesto (.doc)</button>' +
     '</div>' +
 
     '<div id="fl-manifesto-view">' + (uiStoryView === 'brief' ? briefPreviewHtml() : storyHtml(data.summit1, data.brief)) + '</div>';
@@ -1145,7 +1219,7 @@
 
   function briefPreviewHtml(){
     const b = data.brief;
-    const name = data.meta.name || 'Your Legacy Brief';
+    const name = data.meta.name || 'Your WA2050 Manifesto';
     return '<div class="fl-brief-preview">' +
       '<div class="fl-bp-title">'+escapeHtml(data.summit1.challengeTitle || name)+'</div>' +
       '<div class="fl-bp-sub">WA2050 Manifesto &middot; '+escapeHtml(name)+'</div>' +
@@ -1172,7 +1246,7 @@
 
     document.getElementById('fl-draft-btn').addEventListener('click', () => {
       if (data.brief.challengeText || data.brief.visionText || data.brief.pathwayText) {
-        if (!confirm('This will overwrite your current brief text with a fresh draft from your summit answers. Continue?')) return;
+        if (!confirm('This will overwrite your current Manifesto text with a fresh draft from your summit answers. Continue?')) return;
       }
       draftBrief();
       scheduleSave();
@@ -1291,9 +1365,90 @@
       '\\par{\\i\\f0\\fs20\\cf1 "The future will be shaped by those who decided to do something about it."\\par}' +
       '}';
 
-    const safeName = (title || 'legacy-brief').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    triggerDocDownload(rtf, 'legacy-brief-' + (safeName || 'wa2050') + '.doc');
+    const safeName = (title || 'wa2050-manifesto').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    triggerDocDownload(rtf, 'wa2050-manifesto-' + (safeName || 'wa2050') + '.doc');
   }
+
+  // ---- Stakeholder outreach templates ----
+  let outreachIdx = null;
+  let outreachMethod = 'linkedin';
+
+  function firstName(fullName){
+    return (fullName||'').trim().split(/\s+/)[0] || '[Name]';
+  }
+
+  function outreachTemplateText(method, name, position, challenge, groupName){
+    const n = firstName(name);
+    const p = position || 'your organisation';
+    const c = challenge || 'our challenge';
+    const g = groupName || 'our group';
+    if (method === 'linkedin') {
+      return 'Hi ' + n + ', I\'m a WA2050 Scholar working on ' + c + '. Would love to connect — hoping to invite you to a Summit #3 roundtable soon!';
+    }
+    return 'Subject: Invitation to a Leadership Legacy Roundtable — ' + c + '\n\n' +
+      'Dear ' + n + ',\n\n' +
+      'My name is ' + g + ', and we\'re a Scholar group in the Fogarty Foundation\'s Leadership Legacy program — a leadership development initiative run through Fogarty Ripple for young West Australians who are working on real challenges facing the state.\n\n' +
+      'Over five weeks, our group has been going deep on the challenge of ' + c + ': understanding its root causes, developing a vision for what Western Australia could look like if meaningful progress is made, and identifying the most effective pathway to drive that change.\n\n' +
+      'As part of Summit #3 of the program, we\'re hosting a roundtable discussion where we present our thinking to relevant sector leaders and stakeholders, and gather feedback before finalising our WA2050 Manifesto — a document that will be presented at Ripple Legacy Night to a panel of distinguished WA leaders.\n\n' +
+      'Given your role and experience as ' + p + ', we believe your perspective would be incredibly valuable to us, and we\'d love to invite you to join the roundtable, or alternatively have a short conversation with our group beforehand.\n\n' +
+      'Would you be available, or open to a brief chat? We\'d really appreciate the opportunity to learn from you.\n\n' +
+      'Thank you for considering,\n' + g;
+  }
+
+  function updateOutreachText(){
+    const lines = stakeholderLinesArray(data.summit1.stakeholders);
+    const np = stakeholderNamePos(lines[outreachIdx]);
+    const text = outreachTemplateText(outreachMethod, np.name, np.position, data.summit1.challengeTitle, data.meta.name);
+    document.getElementById('fl-outreach-text').value = text;
+    const counter = document.getElementById('fl-outreach-charcount');
+    if (counter) {
+      if (outreachMethod === 'linkedin') {
+        const len = text.length;
+        counter.textContent = len + ' / 200 characters' + (len > 200 ? ' — over LinkedIn\'s limit, trim it down' : '');
+        counter.style.color = len > 200 ? '#B84A4A' : '';
+      } else {
+        counter.textContent = '';
+      }
+    }
+  }
+
+  function openOutreachModal(idx){
+    outreachIdx = idx;
+    outreachMethod = 'linkedin';
+    const lines = stakeholderLinesArray(data.summit1.stakeholders);
+    const np = stakeholderNamePos(lines[idx]);
+    document.getElementById('fl-outreach-title').textContent = 'Reach out to ' + (np.name || 'this stakeholder');
+    document.querySelectorAll('#fl-outreach-methods .fl-outreach-method-btn').forEach(b => b.classList.toggle('fl-active', b.dataset.method === outreachMethod));
+    document.getElementById('fl-outreach-status').textContent = '';
+    updateOutreachText();
+    document.getElementById('fl-outreach-overlay').classList.add('fl-open');
+  }
+
+  function closeOutreachModal(){
+    document.getElementById('fl-outreach-overlay').classList.remove('fl-open');
+  }
+
+  document.querySelectorAll('#fl-outreach-methods .fl-outreach-method-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      outreachMethod = btn.dataset.method;
+      document.querySelectorAll('#fl-outreach-methods .fl-outreach-method-btn').forEach(b => b.classList.toggle('fl-active', b.dataset.method === outreachMethod));
+      updateOutreachText();
+    });
+  });
+  document.getElementById('fl-outreach-close').addEventListener('click', closeOutreachModal);
+  document.getElementById('fl-outreach-overlay').addEventListener('click', (e) => {
+    if (e.target.id === 'fl-outreach-overlay') closeOutreachModal();
+  });
+  document.getElementById('fl-outreach-copy').addEventListener('click', () => {
+    const ta = document.getElementById('fl-outreach-text');
+    ta.select();
+    const status = document.getElementById('fl-outreach-status');
+    navigator.clipboard.writeText(ta.value).then(() => {
+      if (status) status.textContent = 'Copied!';
+    }).catch(() => {
+      if (status) status.textContent = 'Could not copy — select the text and copy manually.';
+    });
+  });
 
   // ---- Init ----
   document.getElementById('fl-save-progress-btn').addEventListener('click', downloadProgressFile);
