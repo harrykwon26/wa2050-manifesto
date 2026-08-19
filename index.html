@@ -179,7 +179,7 @@
     color: var(--orange); font-size: clamp(22px, 3.4vw, 30px); margin-bottom: 4px;
   }
   .fl-vision-hero .fl-vision-note { color: var(--ink-soft); font-size: 13.5px; font-style: italic; margin-bottom: 18px; }
-  .fl-vision-hero .fl-vision-label { font-size: 30px; color: var(--purple-dark); margin: 18px 0 8px; }
+  .fl-vision-hero .fl-vision-label { font-size: 40px; color: var(--purple-dark); margin: 18px 0 8px; }
   .fl-vision-hero .fl-vision-label:first-of-type { margin-top: 0; }
   .fl-vision-hero .fl-vision-textarea {
     width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px;
@@ -394,11 +394,11 @@
   const STORAGE_KEY = 'fogarty-legacy-manifesto-v1';
 
   const LENSES = [
-    { id: '3s', label: '3S', question: 'Sizeable, solvable, sorely neglected?', detail: "A gut-check for whether this challenge deserves real time. Sizeable — how many people, how big a problem? Solvable — is there a credible path forward? Sorely Neglected — who else is already on this, and why hasn't it been fixed?" },
-    { id: 'iceberg', label: 'Iceberg', question: "What's underneath the symptom?", detail: "Most people stop at the symptom — the visible thing that first caught your attention. Push further: is this a Pattern (does it keep happening)? What Structure or incentive produces that pattern? What's the Root Cause — the layer underneath it all, the one worth changing?" },
-    { id: '5whys', label: '5 Whys', question: 'Why, five times — where do you land?', detail: "Ask why the symptom happens, then ask why about that answer — keep going, usually four or five rounds. You've gone far enough once the answer points to a system, not a person." },
-    { id: 'vorp', label: 'VORP', question: "What do you bring that others wouldn't?", detail: "Value Over Replacement, borrowed from sports analytics. The real question isn't \"am I good at this,\" it's \"would this happen anyway without me.\" Weigh Skill (could someone else do this?), Access (do you have a way in?), and Will (would you stick with it?) — it's the rare combination of all three that matters." },
-    { id: 'toc', label: 'TOC', question: "What's the actual mechanism?", detail: "Theory of Change — the one question the other four lenses don't answer alone. Trace it: Activities (what you do) → Outputs (what you produce) → Outcomes (what changes) → Impact (the goal). Comparing paths this way beats running with the first plausible idea." }
+    { id: '3s', label: '3S', question: 'Sizeable, solvable, sorely neglected?', detail: "A gut-check for whether this challenge deserves real time. Sizeable: how big a problem is it? Solvable: is there a credible path forward? Sorely Neglected: who else is already on this?" },
+    { id: 'iceberg', label: 'Iceberg', question: "What's underneath the symptom?", detail: "Most people stop at the symptom. Push further: is this a Pattern (does it keep happening)? What Structure produces that pattern? What's the Root Cause worth changing?" },
+    { id: '5whys', label: '5 Whys', question: 'Why, five times — where do you land?', detail: "Ask why the symptom happens, then keep asking why about each answer, usually four or five rounds. You've gone far enough once the answer points to a system, not a person." },
+    { id: 'vorp', label: 'VORP', question: "What do you bring that others wouldn't?", detail: "Value Over Replacement: weigh Skill (could someone else do this?), Access (do you have a way in?), and Will (would you stick with it?). The rare combination of all three is what matters." },
+    { id: 'toc', label: 'TOC', question: "What's the actual mechanism?", detail: "Trace your path: Activities (what you do), Outputs (what you produce), Outcomes (what changes), Impact (the goal)." }
   ];
 
   const PATHWAYS = [
@@ -850,13 +850,13 @@
     '<div class="fl-grid fl-iceberg-grid">' +
       '<div class="fl-card fl-visual-card" id="fl-tree-container">' + buildIcebergHtml(s.challengeTitle, s.symptom, s.pattern, s.structure, rootLinesArray(s.rootCauses)) + '</div>' +
       '<div class="fl-card fl-iceberg-form-card">' +
-        '<label for="fl-s1-symptom">Symptoms &amp; Events<span class="fl-hint">The urgent, visible issue that caught your attention first — reacting to it alone rarely produces a lasting fix.</span></label>' +
+        '<label for="fl-s1-symptom">Symptoms &amp; Events<span class="fl-hint">The visible thing that first caught your attention, the specific event or issue that made you notice this challenge.</span></label>' +
         '<textarea id="fl-s1-symptom" class="fl-iceberg-field" rows="1" placeholder="e.g. Falling youth voter turnout">'+escapeHtml(s.symptom)+'</textarea>' +
 
-        '<label for="fl-s1-pattern">Patterns &amp; Trends<span class="fl-hint">The recurring trend or cycle over time, revealing rhythms and tipping points a single event can\'t show.</span></label>' +
+        '<label for="fl-s1-pattern">Patterns &amp; Trends<span class="fl-hint">Does this keep happening, or was it a one-off? Look for whether it repeats over time, in certain places, or for certain groups.</span></label>' +
         '<textarea id="fl-s1-pattern" class="fl-iceberg-field" rows="1" placeholder="e.g. Turnout has fallen every election since 2010">'+escapeHtml(s.pattern)+'</textarea>' +
 
-        '<label for="fl-s1-structure">Structure<span class="fl-hint">The rules, roles, and relationships creating feedback loops that reinforce the pattern you\'re seeing.</span></label>' +
+        '<label for="fl-s1-structure">Structure<span class="fl-hint">What system, policy, or incentive is producing that pattern, the mechanism keeping it in place.</span></label>' +
         '<textarea id="fl-s1-structure" class="fl-iceberg-field" rows="1" placeholder="e.g. Civic education isn\'t part of the curriculum">'+escapeHtml(s.structure)+'</textarea>' +
 
         '<label>Root cause<span class="fl-hint">The layer underneath — the one worth changing. List up to 3 if there\'s more than one.</span></label>' +
@@ -1400,20 +1400,17 @@
 
   function outreachTemplateText(method, name, position, challenge, groupName, vision){
     const n = firstName(name);
-    const p = position || 'your organisation';
     const c = challenge || 'my challenge';
     const g = groupName || '[Your name]';
     if (method === 'linkedin') {
-      return 'Hi ' + n + ', I\'m a [Fogarty/Winthrop] Scholar at UWA, working on ' + c + '. Would love to connect, and invite you to our roundtable on 10 Sept!';
+      return 'Hi ' + n + ', I\'m a [Winthrop/Fogarty] Scholar at UWA working on ' + c + ' through a leadership program with the Fogarty Foundation. Would love to connect and chat about this with you!';
     }
-    const workBit = (vision && vision.trim()) ? ('My vision for this is: ' + vision.trim() + '\n\n') : '';
-    return 'Subject: Invitation to a Leadership Legacy Roundtable, ' + c + '\n\n' +
+    return 'Subject: Invitation to Fogarty Ripple Challenge Roundtable, 10th September\n\n' +
       'Dear ' + n + ',\n\n' +
-      'My name is ' + g + ', and I\'m a [Fogarty/Winthrop] Scholar at UWA, taking part in the Fogarty Ripple program, a leadership and enterprise accelerator for high-achieving students.\n\n' +
-      'As part of the program\'s Leadership Legacy stream, I\'m working on a challenge closely related to your work area: ' + c + '.\n\n' +
-      workBit +
-      'I\'d love to invite you to our stakeholder roundtable on 10th September, or if that doesn\'t work, just have a chat beforehand. Given your experience as ' + p + ', I think your perspective would be really valuable.\n\n' +
-      'Would you be available, or open to a brief conversation?\n\n' +
+      'I hope you\'ve been well.\n\n' +
+      'My name is ' + g + ', and I\'m a [Winthrop/Fogarty] Scholar at UWA, taking part in the Fogarty Ripple program, a leadership and enterprise accelerator run by the Fogarty Foundation and UWA. As part of the program\'s Leadership Legacy stream, I\'m working on a challenge closely related to your work area: ' + c + '. Our objective through this program is to develop a vision for change on this challenge, and produce a manifesto for what WA could look like in 2050.\n\n' +
+      'On 10th September, we\'re holding our stakeholder roundtable, where we\'ll share our findings on the challenge area and our vision for change, and invite relevant stakeholders like yourself to engage with our ideas, provide feedback, and share your expertise in the field. I\'d love to invite you to be part of our roundtable, alongside 3 to 4 other stakeholders, to help us flesh out this idea. This will run from 5:00 to 6:00pm at Bloom, St Catherine\'s College UWA, with food and networking to follow.\n\n' +
+      'If the date doesn\'t work for you, I\'d still love the chance to run our ideas past you and hear your insights, so please let me know what would work best.\n\n' +
       'Kind regards,\n' + g;
   }
 
