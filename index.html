@@ -856,7 +856,7 @@
       '<div class="fl-pathway-options" id="fl-lens-options">' +
         LENSES.map(l => '<button type="button" class="fl-pathway-opt'+(s.lens===l.id?' fl-selected':'')+'" data-lens="'+l.id+'"><strong>'+escapeHtml(l.label)+'</strong><span>'+escapeHtml(l.detail)+'</span></button>').join('') +
       '</div>' +
-      '<label for="fl-s1-lens-reasoning" id="fl-lens-why-label">Why?<span class="fl-hint" id="fl-lens-why-hint">'+(lensDetail(s.lens) ? 'Using the ' + escapeHtml(lensLabel(s.lens)) + ' lens: ' + escapeHtml(lensDetail(s.lens)) : 'Pick a lens above, then explain your thinking.')+'</span></label>' +
+      '<label for="fl-s1-lens-reasoning" id="fl-lens-why-label">Why?<span class="fl-hint" id="fl-lens-why-hint">Explain your thinking.</span></label>' +
       '<textarea id="fl-s1-lens-reasoning" rows="3" placeholder="Explain your thinking here…">'+escapeHtml(s.lensReasoning)+'</textarea>' +
       '<label for="fl-s1-lens-reasoning-2">Any other notes?<span class="fl-hint">Optional — no need to pick another lens, just capture another angle if one comes up.</span></label>' +
       '<textarea id="fl-s1-lens-reasoning-2" rows="3" placeholder="Another thought worth capturing…">'+escapeHtml(s.lensReasoning2)+'</textarea>' +
@@ -968,8 +968,6 @@
         const id = btn.dataset.lens;
         data.summit1.lens = id;
         document.querySelectorAll('#fl-lens-options .fl-pathway-opt').forEach(b => b.classList.toggle('fl-selected', b.dataset.lens === id));
-        const hint = document.getElementById('fl-lens-why-hint');
-        if (hint) hint.textContent = 'Using the ' + lensLabel(id) + ' lens: ' + lensDetail(id);
         scheduleSave();
       });
     });
