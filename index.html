@@ -100,6 +100,12 @@
   #fl-root .fl-stage-head .fl-kicker { color: var(--orange); font-weight: 700; font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; }
   #fl-root .fl-stage-head h2 { font-size: clamp(20px, 3.4vw, 28px); color: var(--purple-dark); margin: 4px 0 8px; }
   #fl-root .fl-stage-head p { color: var(--ink-soft); font-size: 15px; max-width: 68ch; }
+  #fl-root .fl-iceberg-link-btn {
+    display: inline-block; margin-top: 10px; padding: 9px 18px; border-radius: 999px;
+    background: var(--orange); color: #fff; font-weight: 700; font-size: 13.5px;
+    text-decoration: none;
+  }
+  #fl-root .fl-iceberg-link-btn:hover { opacity: .9; }
 
   #fl-root .fl-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
   @media (min-width: 780px) { #fl-root .fl-grid { grid-template-columns: 0.85fr 1.15fr; align-items: start; } }
@@ -179,11 +185,12 @@
     color: var(--orange); font-size: clamp(22px, 3.4vw, 30px); margin-bottom: 4px;
   }
   .fl-vision-hero .fl-vision-note { color: var(--ink-soft); font-size: 13.5px; font-style: italic; margin-bottom: 18px; }
-  .fl-vision-hero .fl-vision-label { font-size: 40px; color: var(--purple-dark); margin: 18px 0 8px; }
+  #fl-root .fl-vision-hero .fl-vision-label { font-size: 20px; color: var(--purple-dark); margin: 18px 0 8px; }
   .fl-vision-hero .fl-vision-label:first-of-type { margin-top: 0; }
   .fl-vision-hero .fl-vision-textarea {
     width: 100%; border: 1.5px solid var(--line); border-radius: 12px; padding: 14px 16px;
     background: var(--paper-card); font-size: 18px; line-height: 1.5; color: var(--ink); resize: vertical;
+    margin-top: 14px;
   }
   .fl-vision-hero .fl-vision-textarea:focus { border-color: var(--orange); }
 
@@ -846,6 +853,7 @@
       '<div class="fl-kicker">Iceberg Analysis</div>' +
       '<h2>Go Beneath the Surface of the Challenge</h2>' +
       '<p>Most people stop at the surface of the challenge. Walk down through the symptoms, what keeps happening, what systems produce it, and the root cause/s underneath it all — the layer worth changing.</p>' +
+      '<a href="https://www.socialinnovationstudio.com/the-iceberg-model-a-systems-thinking-guide" target="_blank" rel="noopener noreferrer" class="fl-iceberg-link-btn">Read the Iceberg Model guide &amp; examples &rarr;</a>' +
     '</div>' +
     '<div class="fl-grid fl-iceberg-grid">' +
       '<div class="fl-card fl-visual-card" id="fl-tree-container">' + buildIcebergHtml(s.challengeTitle, s.symptom, s.pattern, s.structure, rootLinesArray(s.rootCauses)) + '</div>' +
