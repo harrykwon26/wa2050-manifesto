@@ -101,7 +101,7 @@
   #fl-root .fl-stage-head h2 { font-size: clamp(20px, 3.4vw, 28px); color: var(--purple-dark); margin: 4px 0 8px; }
   #fl-root .fl-stage-head p { color: var(--ink-soft); font-size: 15px; max-width: 68ch; }
   #fl-root .fl-iceberg-link-btn {
-    display: inline-block; margin-top: 10px; padding: 9px 18px; border-radius: 999px;
+    display: inline-block; margin-top: 10px; margin-right: 10px; padding: 9px 18px; border-radius: 999px;
     background: var(--orange); color: #fff; font-weight: 700; font-size: 13.5px;
     text-decoration: none;
   }
@@ -627,7 +627,13 @@
     for (let i=0;i<n;i++) arr.push(lines[i] !== undefined ? lines[i] : '');
     return arr;
   }
-  function rootLinesArray(text){ return linesArray(text, 3); }
+  const ROOT_SEP = '\uE000';
+  function rootLinesArray(text){
+    const parts = (text || '').split(ROOT_SEP);
+    const arr = [];
+    for (let i=0;i<3;i++) arr.push(parts[i] !== undefined ? parts[i] : '');
+    return arr;
+  }
   function stakeholderLinesArray(text){ return linesArray(text, 6); }
 
   const ROOT_CAUSE_PLACEHOLDERS = [
@@ -666,6 +672,13 @@
     return '<div class="fl-t3-node" style="left:'+left+';top:'+top+';"><div class="fl-tree-chip '+cls+'">'+inner+'</div></div>';
   }
 
+  function continuousChipHtml(text, cls, left, top){
+    const trimmed = (text || '').trim();
+    if (!trimmed) return '<div class="fl-t3-node fl-t3-dot" style="left:'+left+';top:'+top+';"></div>';
+    const inner = (text || '').split('\n').map(l => escapeHtml(l)).join('<br>');
+    return '<div class="fl-t3-node" style="left:'+left+';top:'+top+';"><div class="fl-tree-chip '+cls+'">'+inner+'</div></div>';
+  }
+
   function buildIcebergHtml(challengeTitle, symptom, pattern, structure, rootCauses){
     let html = '<div class="fl-tree3">' + ICEBERG_SVG;
     const cp = pct(CHALLENGE_POS[0], CHALLENGE_POS[1]);
@@ -678,7 +691,7 @@
     html += chipNodeHtml((structure||'').split('\n').filter(Boolean), 'fl-structure-chip', stp.left, stp.top);
     for (let i=0;i<3;i++){
       const rp = pct(ROOTCAUSE_POS[i][0], ROOTCAUSE_POS[i][1]);
-      html += chipNodeHtml([rootCauses[i]], 'fl-rootcause-chip', rp.left, rp.top);
+      html += continuousChipHtml(rootCauses[i], 'fl-rootcause-chip', rp.left, rp.top);
     }
     html += '</div>';
     return html;
@@ -854,6 +867,7 @@
       '<h2>Go Beneath the Surface of the Challenge</h2>' +
       '<p>Most people stop at the surface of the challenge. Walk down through the symptoms, what keeps happening, what systems produce it, and the root cause/s underneath it all — the layer worth changing.</p>' +
       '<a href="https://www.socialinnovationstudio.com/the-iceberg-model-a-systems-thinking-guide" target="_blank" rel="noopener noreferrer" class="fl-iceberg-link-btn">Read the Iceberg Model guide &amp; examples &rarr;</a>' +
+      '<a href="https://www.youtube.com/watch?v=y6h2_EcOOcM" target="_blank" rel="noopener noreferrer" class="fl-iceberg-link-btn">Watch the Iceberg Model explained (video) &rarr;</a>' +
     '</div>' +
     '<div class="fl-grid fl-iceberg-grid">' +
       '<div class="fl-card fl-visual-card" id="fl-tree-container">' + buildIcebergHtml(s.challengeTitle, s.symptom, s.pattern, s.structure, rootLinesArray(s.rootCauses)) + '</div>' +
@@ -864,7 +878,7 @@
         '<label for="fl-s1-pattern">Patterns &amp; Trends<span class="fl-hint">Does this keep happening, or was it a one-off? Look for whether it repeats over time, in certain places, or for certain groups.</span></label>' +
         '<textarea id="fl-s1-pattern" class="fl-iceberg-field" rows="1" placeholder="e.g. Turnout has fallen every election since 2010">'+escapeHtml(s.pattern)+'</textarea>' +
 
-        '<label for="fl-s1-structure">Structure<span class="fl-hint">What system, policy, or incentive is producing that pattern, the mechanism keeping it in place.</span></label>' +
+        '<label for="fl-s1-structure">Underlying Structure<span class="fl-hint">What system, policy, or incentive is producing that pattern, the mechanism keeping it in place.</span></label>' +
         '<textarea id="fl-s1-structure" class="fl-iceberg-field" rows="1" placeholder="e.g. Civic education isn\'t part of the curriculum">'+escapeHtml(s.structure)+'</textarea>' +
 
         '<label>Root cause<span class="fl-hint">The layer underneath — the one worth changing. List up to 3 if there\'s more than one.</span></label>' +
@@ -909,13 +923,15 @@
         if (key === 'challengeTitle' || key === 'symptom' || key === 'pattern' || key === 'structure') refreshTreeVisual();
       });
     });
+    const fieldMaxLines = new Map([[sy,3],[pa,5],[st2,5]]);
     [sy, pa, st2].forEach(ta => {
-      ta.rows = Math.min(3, Math.max(1, ta.value.split('\n').length));
+      const max = fieldMaxLines.get(ta);
+      ta.rows = Math.min(max, Math.max(1, ta.value.split('\n').length));
       ta.addEventListener('input', () => {
-        ta.rows = Math.min(3, Math.max(1, ta.value.split('\n').length));
+        ta.rows = Math.min(max, Math.max(1, ta.value.split('\n').length));
       });
       ta.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && ta.value.split('\n').length >= 3) {
+        if (e.key === 'Enter' && ta.value.split('\n').length >= max) {
           e.preventDefault();
         }
       });
@@ -925,7 +941,7 @@
         const idx = +ta.dataset.idx;
         const arr = rootLinesArray(data.summit1.rootCauses);
         arr[idx] = ta.value;
-        data.summit1.rootCauses = arr.join('\n');
+        data.summit1.rootCauses = arr.join(ROOT_SEP);
         scheduleSave();
         refreshTreeVisual();
       });
