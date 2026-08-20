@@ -496,7 +496,7 @@
   function emptyData(){
     return {
       meta: { name: '' },
-      summit1: { challengeTitle: '', lens: '', lensReasoning: '', lensReasoning2: '', symptom: '', pattern: '', structure: '', rootCauses: '', vision: '', stakeholders: '' },
+      summit1: { challengeTitle: '', lens: '', lensReasoning: '', lensReasoning2: '', symptom: '', pattern: '', structure: '', rootCauses: '', challengeParagraph: '', vision: '', stakeholders: '' },
       summit2: { pathways: [], reasoning: '', possibleBecause: '', commitment: '', pathwayNotes: {} },
       summit3: { audiences: [], contacts: '', whatWorked: '', whatToAdjust: '', why: '', how: '', what: '' },
       brief: { challengeText: '', visionText: '', pathwayText: '', submitted: false, submittedAt: null }
@@ -885,6 +885,8 @@
     '<div class="fl-vision-hero">' +
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
       '<p class="fl-vision-note">This is a first draft — you\'ll flesh this out over the next five weeks.</p>' +
+      '<label for="fl-s1-challenge-para" class="fl-vision-label">We believe Western Australia faces a challenge of…<span class="fl-hint">The challenge, some of the underlying things you\'ve identified, and the root cause you want to work on.</span></label>' +
+      '<textarea id="fl-s1-challenge-para" class="fl-vision-textarea" rows="3" placeholder="…young West Australians disengaging from democracy. This is driven by civic education not being part of the curriculum, and young people not feeling their voice matters. Without action, this pattern will continue and deepen.">'+escapeHtml(s.challengeParagraph)+'</textarea>' +
       '<label for="fl-s1-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
       '<textarea id="fl-s1-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future, not passive observers of it. By 2050, young people are engaged in civic life from an early age, equipped with the knowledge and confidence to contribute their voice, and WA\'s decision-makers reflect the full diversity of the generation they represent.">'+escapeHtml(s.vision)+'</textarea>' +
     '</div>';
@@ -897,9 +899,10 @@
     const pa = document.getElementById('fl-s1-pattern');
     const st2 = document.getElementById('fl-s1-structure');
     const v = document.getElementById('fl-s1-vision');
+    const cp = document.getElementById('fl-s1-challenge-para');
     const lensReasoning = document.getElementById('fl-s1-lens-reasoning');
     const lensReasoning2 = document.getElementById('fl-s1-lens-reasoning-2');
-    [ [t,'challengeTitle'], [sy,'symptom'], [pa,'pattern'], [st2,'structure'], [v,'vision'], [lensReasoning,'lensReasoning'], [lensReasoning2,'lensReasoning2'] ].forEach(([node,key]) => {
+    [ [t,'challengeTitle'], [sy,'symptom'], [pa,'pattern'], [st2,'structure'], [v,'vision'], [cp,'challengeParagraph'], [lensReasoning,'lensReasoning'], [lensReasoning2,'lensReasoning2'] ].forEach(([node,key]) => {
       node.addEventListener('input', () => {
         data.summit1[key] = node.value;
         scheduleSave();
@@ -1029,6 +1032,8 @@
     '<div class="fl-vision-hero">' +
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
       '<p class="fl-vision-note">Revisit and sharpen this as your thinking develops.</p>' +
+      '<label for="fl-s2-challenge-para" class="fl-vision-label">We believe Western Australia faces a challenge of…<span class="fl-hint">The challenge, some of the underlying things you\'ve identified, and the root cause you want to work on.</span></label>' +
+      '<textarea id="fl-s2-challenge-para" class="fl-vision-textarea" rows="3" placeholder="…young West Australians disengaging from democracy. This is driven by civic education not being part of the curriculum, and young people not feeling their voice matters. Without action, this pattern will continue and deepen.">'+escapeHtml(data.summit1.challengeParagraph)+'</textarea>' +
       '<label for="fl-s2-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
       '<textarea id="fl-s2-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future, not passive observers of it. By 2050, young people are engaged in civic life from an early age, equipped with the knowledge and confidence to contribute their voice, and WA\'s decision-makers reflect the full diversity of the generation they represent.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
     '</div>';
@@ -1074,6 +1079,8 @@
 
     const visionField = document.getElementById('fl-s2-vision');
     visionField.addEventListener('input', () => { data.summit1.vision = visionField.value; scheduleSave(); });
+    const challengeParaField = document.getElementById('fl-s2-challenge-para');
+    challengeParaField.addEventListener('input', () => { data.summit1.challengeParagraph = challengeParaField.value; scheduleSave(); });
   }
 
   function wirePathwayNoteFields(){
@@ -1134,6 +1141,8 @@
     '<div class="fl-vision-hero">' +
       '<div class="fl-vision-kicker">Your Legacy Vision</div>' +
       '<p class="fl-vision-note">Revisit and sharpen this one final time before it becomes part of your WA2050 Manifesto.</p>' +
+      '<label for="fl-s3-challenge-para" class="fl-vision-label">We believe Western Australia faces a challenge of…<span class="fl-hint">The challenge, some of the underlying things you\'ve identified, and the root cause you want to work on.</span></label>' +
+      '<textarea id="fl-s3-challenge-para" class="fl-vision-textarea" rows="3" placeholder="…young West Australians disengaging from democracy. This is driven by civic education not being part of the curriculum, and young people not feeling their voice matters. Without action, this pattern will continue and deepen.">'+escapeHtml(data.summit1.challengeParagraph)+'</textarea>' +
       '<label for="fl-s3-vision" class="fl-vision-label">My/Our vision for WA2050 is a Western Australia where…<span class="fl-hint">What has changed, and for whom?</span></label>' +
       '<textarea id="fl-s3-vision" class="fl-vision-textarea" rows="3" placeholder="…young people see themselves as active participants in shaping the state\'s future, not passive observers of it. By 2050, young people are engaged in civic life from an early age, equipped with the knowledge and confidence to contribute their voice, and WA\'s decision-makers reflect the full diversity of the generation they represent.">'+escapeHtml(data.summit1.vision)+'</textarea>' +
     '</div>';
@@ -1178,6 +1187,8 @@
 
     const visionField = document.getElementById('fl-s3-vision');
     visionField.addEventListener('input', () => { data.summit1.vision = visionField.value; scheduleSave(); });
+    const challengeParaField = document.getElementById('fl-s3-challenge-para');
+    challengeParaField.addEventListener('input', () => { data.summit1.challengeParagraph = challengeParaField.value; scheduleSave(); });
   }
 
   function refreshGoldenCircle(){
@@ -1196,7 +1207,7 @@
   // ---- Manifesto stage ----
   function draftBrief(){
     const s1 = data.summit1, s2 = data.summit2, s3 = data.summit3;
-    data.brief.challengeText = 'We believe Western Australia faces a challenge of ' + (s1.challengeTitle || '[your challenge]') + '. At its core, this is driven by ' + (joinLines(s1.rootCauses, '; ') || '[root cause]') + '. Without action, ' + (joinLines(s1.symptom, '; ') || '[symptom]') + ' will continue' + (s3.why ? '. This matters to us personally: ' + s3.why : '') + '.';
+    data.brief.challengeText = 'We believe Western Australia faces a challenge of ' + (s1.challengeParagraph || '[your challenge, root cause, and consequence]') + (s3.why ? ' This matters to us personally: ' + s3.why + '.' : '');
     data.brief.visionText = (s1.vision || 'A WA where…') + ' We believe this is possible because ' + (s2.possibleBecause || '[evidence or reason for hope]') + (s3.how ? ' ' + s3.how : '') + '.';
     data.brief.pathwayText = 'The most effective pathway to create this change is through ' + (pathwayLabels(s2.pathways) || '[your chosen pathway]') + '. Our role in pursuing it is to ' + (s2.commitment || '[your commitment]') + '.' + (s3.what ? ' Specifically: ' + s3.what : '');
   }
